@@ -13,24 +13,37 @@ public class Tapis {
 	}
 
 	public void enfiler(Paquet paquet) {
-		if(size == capacity) {
-			capacity *= 2;
-			Paquet[] tmp = new Paquet[capacity];
-			for(int i = 0; i < size; i++) {
-				tmp[i] =  tapis[i];
+		synchronized(this) {
+			while(size == capacity) {
+				try {
+					this.wait();
+				} catch (InterruptedException e) {
+		
+					e.printStackTrace();
+				}
 			}
-			this.tapis = tmp;
+			if(size == 0) this.notify();
+			tapis[size] = paquet;	
+			sizeAsc();
 		}
-		tapis[size] = paquet;
-		sizeAsc();
 	}
 	
-	public Paquet defiler() {
-		if(size == 0) { return null; }
-		Paquet ret = tapis[size-1];
-		tapis[size-1] = null;
-		sizeDec(); 
-		return ret;	
+	public Paquet defiler(Compteur compteur) {
+		synchronized(this) {
+			while(size == 0) { 
+				try {
+					this.wait();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				} 
+			}
+			if(size == capacity) { this.notify();}
+			Paquet ret = tapis[size-1];
+			tapis[size-1] = null;
+			sizeDec();
+			compteur.decCount();
+			return ret;	
+		}
 	}
 	
 	public int getSize() {

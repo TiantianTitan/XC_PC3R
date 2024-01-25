@@ -10,27 +10,26 @@ public class Producteur extends Thread implements Runnable {
 		this.nameP = nameP;
 		this.tapis = tapis;
 		this.nb_production = nb_production;
+		this.nb_current = 0;
 	}
 	
 	@Override
 	public void run() {
 
-		while(true) {
-			int times = 0;
+		while(nb_current < nb_production) {
 			synchronized (tapis) {
-				if(tapis.getSize() > 0) {
-					tapis.enfiler(new Paquet(nameP));
-//					System.out.println(times + ": "+ nameP + "ajoute" + );
-				}
+				tapis.enfiler(new Paquet(nameP));
+				nb_current++;
+				System.out.println(this.nameP + " " +this.nb_current);
 			}
-			times++;
 		}
-	
 	}
 
 	public String getNameP() {
 		return this.nameP;
 	}
 	
+	
+
 	
 }
