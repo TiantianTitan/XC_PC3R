@@ -7,36 +7,36 @@
 
 
 
-typedef struct paquet           //水果包裹
+typedef struct paquet           //paquet de fruits      
 {
     char* fruit;
 } paquet;
 
 
 /*
-    tapis必须实现FIFO，也就是先进队列，也就是先进者先出的模式
-    故而必须要有加入和取出操作
-    涉及到数据安全，需要有mutex和condition variable
+    Tapis doit implémenter FIFO, qui est la file d'attente avancée, qui est le mode premier entré, premier sorti.
+    Il doit donc y avoir des opérations d’ajout et de suppression
+    En matière de sécurité des données, des variables mutex et de condition sont requises
 */
-typedef struct tapis            //传送带
+typedef struct tapis            //Definition de tapis   
 {
-    paquet** fruits;             //包裹数组
-    int capacity;               //最大容量
-    int nb;                     //当前包裹数量
-    int index;                  //拿取的下标
-    pthread_mutex_t mutex;      //互斥锁
-    pthread_cond_t cv_Full;      //满额锁
-    pthread_cond_t cv_Empty;     //空锁
+    paquet** fruits;            //tableau de fruits
+    int capacity;               //maxsize
+    int nb;                     //size actuel
+    int index;                  //L'index de paquet à retirer
+    pthread_mutex_t mutex;      
+    pthread_cond_t cv_Full;      
+    pthread_cond_t cv_Empty;     
 }tapis;
 
-paquet* makepaquet(char* nom)       //初始化包裹
+paquet* makepaquet(char* nom)       //Initialiser une paquet
 {
     paquet* p = (paquet*)malloc(sizeof(paquet));
-    p->fruit = nom;        //用newcopy避免内存问题
+    p->fruit = nom;        
     return p;
 }
 
-tapis* maketapis(int maxsize)               //初始化传送带
+tapis* maketapis(int maxsize)               //Initialliser tapis
 {
     tapis* t = (tapis*)malloc(sizeof(tapis));
     t->capacity  = maxsize;
@@ -61,7 +61,7 @@ tapis* maketapis(int maxsize)               //初始化传送带
     return t;
 }
 
-void free_paquet(paquet* p)     //清理内存
+void free_paquet(paquet* p)     
 {
     if (p != NULL)
     {
@@ -70,7 +70,7 @@ void free_paquet(paquet* p)     //清理内存
     }
 }
 
-void free_tapis(tapis* t)       //清理内存
+void free_tapis(tapis* t)       
 {
     if (t != NULL)
     {
@@ -111,29 +111,28 @@ void ensureCapacity(tapis *t)
     }
 }
 
-void pushTapis(tapis* t, paquet* p)    //生产者添加paquet
+void pushTapis(tapis* t, paquet* p)    
 {
     pthread_mutex_lock(&t->mutex);
-    while (isFull(t))                   //满了就等待解锁即可
+    while (isFull(t))                   
     {
         pthread_cond_wait(&t->cv_Full, &t->mutex);
     }
 
     if (isEmpty(t))
     {
-        // 通知消费者有新的 paquet 可用
         pthread_cond_signal(&t->cv_Empty);
     }
-    ensureCapacity(t);             //确保容量
+    ensureCapacity(t);            
     t->fruits[t->nb] = p;
     t->nb++;
-    pthread_mutex_unlock(&t->mutex);    //解锁
+    pthread_mutex_unlock(&t->mutex);    
 }
 
 paquet* popTapis(tapis* t)
 {
     pthread_mutex_lock(&t->mutex);
-    while (isEmpty(t))                  // 等待直到有 paquet 可用
+    while (isEmpty(t))                  
     {
         pthread_cond_wait(&t->cv_Empty, &t->mutex);
     }
@@ -142,12 +141,12 @@ paquet* popTapis(tapis* t)
     {
         pthread_cond_signal(&t->cv_Full);
     }
-     // 从 tapis 中取出 paquet
+
     paquet* p = t->fruits[t->index];
     t->index++;
     t->nb--;
-    // 通知生产者有空间可用
-    pthread_mutex_unlock(&t->mutex);    //解锁
+
+    pthread_mutex_unlock(&t->mutex);    
     return p;
 }
 
@@ -161,9 +160,9 @@ size_t getNb(tapis* t)
 
 typedef struct Producer
 {
-    char* paquet_nom;       //水果的名字
-    int nb_target;          //目标数量
-    int nb_actuel;          //当前实际数量
+    char* paquet_nom;       
+    int nb_target;          
+    int nb_actuel;          
     tapis* t;               
 }Producer;
 
@@ -232,36 +231,36 @@ void PrintTapis(tapis* t)
 
 int main()
 {
-    pthread_t th_Producer[5];   //假设五个生产者
-    pthread_t th_Consumer[3];   //三个吃货
-    tapis* t = maketapis(1);   //假设传送带容量1
+    pthread_t th_Producer[5];   
+    pthread_t th_Consumer[3];   
+    tapis* t = maketapis(1);   
 
     int terminationCons = 0;
 
-    char * produits[5]={"pomme", "poire", "orange", "kiwi", "banane"};  //水果种类
+    char * produits[5]={"pomme", "poire", "orange", "kiwi", "banane"};  //Types de fruits
 
-    for (int i = 0 ; i < 5; i++)    //创建生产者
+    for (int i = 0 ; i < 5; i++)    
     {
-        Producer* p = creatProducer(produits[i], 3, t);         //每种水果都做3个
-        pthread_create(&th_Producer[i],NULL,ProWork,p);         //创建线程
+        Producer* p = creatProducer(produits[i], 3, t);         
+        pthread_create(&th_Producer[i],NULL,ProWork,p);         
     }
     
     
-    for (int i = 0 ; i < 3; i++)    //创建生产者
+    for (int i = 0 ; i < 3; i++)    
     {
         Consumer* c = creatConsumer(i, 2, t);
         pthread_create(&th_Consumer[i], NULL, ConsWork, c);
     }
     
 
-    // 等待线程完成
+
     for (int i = 0; i < 5; i++) 
     {
         pthread_join(th_Producer[i], NULL);
     }
 
     
-    // 等待线程完成
+
     for (int i = 2; i >= 0; i--) 
     {
         pthread_join(th_Consumer[i], NULL);
