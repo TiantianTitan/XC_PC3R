@@ -143,6 +143,7 @@ paquet* popTapis(tapis* t)
     }
 
     paquet* p = t->fruits[t->index];
+    t->fruits[t->index] = NULL;
     t->index++;
     t->nb--;
 
@@ -206,6 +207,13 @@ void* ProWork(void* args)
     return 0;
 }
 
+paquet* copyPaquet(paquet* p)
+{
+    paquet* pp = (paquet*)malloc(sizeof(paquet));
+    pp->fruit = p->fruit;
+    return pp;
+}
+
 void* ConsWork(void* args)
 {
     Consumer* c = args;
@@ -213,9 +221,14 @@ void* ConsWork(void* args)
     while(c->counter > 0)
     {
         paquet* p = popTapis(c->t);
-        printf("Consumer%d mange un(e) %s, il reste %d, it's Number %d of tapis, tapis have %d reste !!!\n", c->id, p->fruit, c->counter-1, c->t->index, c->t->nb - c->t->index);
-        c->counter--;
-        //free_paquet(p);
+        if (p != NULL)
+        {
+            printf("Consumer%d mange un(e) %s, il reste %d, it's Number %d of tapis, tapis have %d reste !!!\n", c->id, p->fruit, c->counter-1, c->t->index, c->t->nb - c->t->index);
+            c->counter--;
+        }
+        else
+            printf("\n\nPOP WRONG !\n\n");
+
     }
     printf("Consumer%d is finished ! \n", c->id);
     return 0;
@@ -232,7 +245,7 @@ void PrintTapis(tapis* t)
 int main()
 {
     pthread_t th_Producer[5];   
-    pthread_t th_Consumer[3];   
+    pthread_t th_Consumer[4];   
     tapis* t = maketapis(1);   
 
     int terminationCons = 0;
@@ -241,14 +254,14 @@ int main()
 
     for (int i = 0 ; i < 5; i++)    
     {
-        Producer* p = creatProducer(produits[i], 3, t);         
+        Producer* p = creatProducer(produits[i], 7, t);         
         pthread_create(&th_Producer[i],NULL,ProWork,p);         
     }
     
     
-    for (int i = 0 ; i < 3; i++)    
+    for (int i = 0 ; i < 4; i++)    
     {
-        Consumer* c = creatConsumer(i, 2, t);
+        Consumer* c = creatConsumer(i, 5, t);
         pthread_create(&th_Consumer[i], NULL, ConsWork, c);
     }
     
@@ -261,13 +274,13 @@ int main()
 
     
 
-    for (int i = 2; i >= 0; i--) 
+    for (int i = 0; i < 5; i++) 
     {
         pthread_join(th_Consumer[i], NULL);
     }
     
 
-
+    printf("All Done \n");
     free_tapis(t);
 
     return 0;
