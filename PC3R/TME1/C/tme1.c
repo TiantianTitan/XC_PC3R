@@ -1,9 +1,16 @@
+/*
+Author : 
+	Haotian Xue
+	Hejun Cao
+
+Date : 
+	30/01/2024	
+*/
 #include<stdio.h>
 #include<string.h>
 #include<pthread.h>
 #include<stdlib.h>
 #include<unistd.h>
-
 
 char* produits[5]={"pomme", "poire", "orange", "kiwi", "banane"};
 int PROD_NB_THREAD=sizeof(produits)/sizeof(char*);
@@ -30,26 +37,26 @@ typedef struct
 
 char* newcopy(const char* src)
 {
-	size_t n = strlen(src);
-	char* dest = malloc((strlen(src)+1)*sizeof(char));
-	for(size_t i=0; i <=n; ++i) 
+	size_t n = strlen( src );
+	char* dest = malloc( (strlen( src ) +1 ) * sizeof( char ) );
+	for(size_t i = 0; i <= n; ++i) 
     {
-        dest[i]=src[i];
+        dest[ i ]=src[ i ];
     }
 	return dest;
 }
 
 void mkpaquet(paquet* p, char* str)
 {
-	p->nom = newcopy(str);
+	p->nom = newcopy( str );
 }
 
-void free_paquet(paquet*p)
+void free_paquet(paquet* p)
 {
-	if (p !=NULL)
+	if (p != NULL)
     {
-	    free(p->nom);
-	    free(p);
+	    free( p->nom );
+	    free( p );
 	}
 }
 
@@ -58,37 +65,37 @@ void mktapis(size_t maxsize, tapis* t)
 	t->allocsize= maxsize;
 	t->index=0;
 	t->sz=0;
-	t->tab=malloc(maxsize*sizeof(paquet));
-	pthread_mutex_init(&t->mutex, NULL);
-    pthread_cond_init(&t->cv_empty, NULL);
-	pthread_cond_init(&t->cv_full, NULL);
+	t->tab=malloc( maxsize*sizeof( paquet ) );
+	pthread_mutex_init( &t->mutex, NULL );
+    pthread_cond_init( &t->cv_empty, NULL );
+	pthread_cond_init( &t->cv_full, NULL );
 }
 
 //Only used in push and pop, so dont need to use mutex
 int empty(tapis* t)
 {
-	return (t->sz==0);
+	return ( t->sz == 0 );
 }
 
 int full(tapis* t)
 {
-	return (t->sz ==t->allocsize);
+	return ( t->sz == t->allocsize );
 }
 
 size_t size(tapis* t)
 {
-	pthread_mutex_lock(&t->mutex);
+	pthread_mutex_lock( &t->mutex );
 	size_t res = t->sz;
-	pthread_mutex_unlock(&t->mutex);
+	pthread_mutex_unlock( &t->mutex );
 	return res;
 }
 
 
-char* stringConcat(char* src1, char* src2)
+char* ConcatStr(char* src1, char* src2)
 {
-	int lengthSrc1 = strlen(src1);
-	int lengthSrc2 = strlen(src2);
-	char* res = malloc ((lengthSrc1+lengthSrc2+1)*sizeof(char));
+	int lengthSrc1 = strlen( src1 );
+	int lengthSrc2 = strlen( src2 );
+	char* res = malloc ( ( lengthSrc1 + lengthSrc2 + 1 ) * sizeof( char ) );
 	for (int j=0; j < lengthSrc1; j++)
     {
         res [j] = src1[j];
@@ -103,9 +110,10 @@ char* stringConcat(char* src1, char* src2)
 	return res;
 }
 
-int digitsInANumber(int i){
+int digitsInANumber(int i)
+{
 	int count =0;
-	while(i != 0)
+	while( i != 0 )
 	{
 		count++;
 		i /= 10;
@@ -113,9 +121,9 @@ int digitsInANumber(int i){
 	return count;
 }
 
-char* intToString(int i)
+char* IntToStr(int i)
 {
-	char* res = malloc((digitsInANumber(i)+1)*sizeof(char));
+	char* res = malloc( (digitsInANumber( i ) + 1 )*sizeof( char ) );
 	sprintf(res, "%d", i);
 	return res;
 }
@@ -130,23 +138,33 @@ typedef struct
 
 void freeProducer(Producer* t)
 {
-	if(t != NULL)
+	if( t != NULL )
     {
 		free(t->nom_de_produit);
 		free(t);
 	}
 }
 
-typedef struct{
+typedef struct
+{
 	int id;
 	int* compteur;
 	tapis* tapis;
 }Consumer;
 
-paquet* pushTapis(tapis* t, int* compt){
+paquet* pushTapis(tapis* t, int* compt)
+{
 	pthread_mutex_lock(&t->mutex);
-	while(empty(t)) pthread_cond_wait(&t->cv_empty , &t->mutex);
-	if(full(t)) pthread_cond_signal(&t->cv_full);
+	while(empty(t)) 
+	{
+		pthread_cond_wait(&t->cv_empty , &t->mutex);
+	}
+
+	if(full(t)) 
+	{
+		pthread_cond_signal(&t->cv_full);
+	}
+
 	paquet* p = t->tab[t->index];
 	t->sz--;
 	t->index=(t->index+1)%t->allocsize;
@@ -155,21 +173,31 @@ paquet* pushTapis(tapis* t, int* compt){
 	return p;
 }
 
-void popTapis(tapis*t, paquet* p){
+void popTapis(tapis*t, paquet* p)
+{
 	pthread_mutex_lock(&t->mutex);
-	while(full(t)) pthread_cond_wait(&t->cv_full , &t->mutex);
-	if(empty(t)) pthread_cond_signal(&t->cv_empty);
-	t->tab[(t->index+t->sz)%t->allocsize]=p;
+	while(full(t)) 
+	{
+		pthread_cond_wait(&t->cv_full , &t->mutex);
+	}
+	if(empty(t)) 
+	{
+		pthread_cond_signal(&t->cv_empty);
+	}
+
+	t->tab[ ( t->index+t->sz ) %t->allocsize ]=p;
 	t->sz++;
 	pthread_mutex_unlock(&t->mutex);
 }
 
-void* prodWork(void* args){
+void* prodWork(void* args)
+{
 	Producer* prod = args;
 
-	while (prod->nb_target!=prod->nb_actuel){
+	while (prod->nb_target != prod->nb_actuel)
+	{
 		paquet* p = malloc(sizeof(paquet));
-		mkpaquet(p, stringConcat(prod->nom_de_produit,intToString(prod->nb_actuel)));
+		mkpaquet(p, ConcatStr( prod->nom_de_produit, IntToStr( prod->nb_actuel ) ) );
 		popTapis(prod->tapis, p);
 		printf("Producer created %s\n", p->nom);
 		prod->nb_actuel++;
@@ -181,9 +209,10 @@ void* prodWork(void* args){
 void* consWork(void* args){
 	Consumer* cons = (Consumer*)args;
 
-	while((*(cons->compteur))>0){
-		paquet* p =pushTapis(cons->tapis,cons->compteur);
-		printf("C%d mange %s\n", cons->id, p->nom);
+	while((*(cons->compteur))>0)
+	{
+		paquet* p = pushTapis( cons->tapis, cons->compteur );
+		printf("Consumer%d mange %s\n", cons->id, p->nom);
 		free_paquet(p);
 	}
 	free(cons);
@@ -208,31 +237,35 @@ int main(void) {
 
 	mktapis(TAILLE_TAPIS,&tapis);
 
-	while(prodCreat < PROD_NB_THREAD){
-		Producer*args = malloc(sizeof (Producer));
-		args->nom_de_produit=produits[prodCreat];
-		args->nb_actuel=0;
-		args->nb_target= CIBLE_PRODUCTION;
-		args->tapis=&tapis;
-		pthread_create(&(tidPROD[prodCreat]), NULL, prodWork, args);
+	while(prodCreat < PROD_NB_THREAD)
+	{
+		Producer* p = malloc(sizeof (Producer));
+		p->nom_de_produit=produits[prodCreat];
+		p->nb_actuel=0;
+		p->nb_target= CIBLE_PRODUCTION;
+		p->tapis=&tapis;
+		pthread_create(&(tidPROD[prodCreat]), NULL, prodWork, p);
 		prodCreat++;
 	}
 
-	while(consCreat < CONS_NB_THREAD){
-		Consumer* args = malloc(sizeof (Consumer));
-		args->compteur=&compteur;
-		args->id=consCreat;
-		args->tapis=&tapis;
-		pthread_create(&(tidCONS[consCreat]), NULL, consWork, args);
+	while(consCreat < CONS_NB_THREAD)
+	{
+		Consumer* c = malloc(sizeof (Consumer));
+		c->compteur=&compteur;
+		c->id=consCreat;
+		c->tapis=&tapis;
+		pthread_create(&(tidCONS[consCreat]), NULL, consWork, c);
 		consCreat++;
 	}
 
-	while(terminaisonsPROD < PROD_NB_THREAD){
+	while(terminaisonsPROD < PROD_NB_THREAD)
+	{
 		pthread_join(tidPROD[terminaisonsPROD],NULL);
 		terminaisonsPROD++;
 	}
 
-	while(terminaisonsCONS < CONS_NB_THREAD){
+	while(terminaisonsCONS < CONS_NB_THREAD)
+	{
 		pthread_join(tidCONS[terminaisonsCONS],NULL);
 		terminaisonsCONS++;
 	}
