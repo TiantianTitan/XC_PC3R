@@ -1,287 +1,245 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <pthread.h>
-#include <unistd.h>
-#include <stdbool.h>
+#include<stdio.h>
+#include<string.h>
+#include<pthread.h>
+#include<stdlib.h>
+#include<unistd.h>
 
 
+char* produits[5]={"pomme", "poire", "orange", "kiwi", "banane"};
+int PROD_NB_THREAD=sizeof(produits)/sizeof(char*);
 
-typedef struct paquet           //paquet de fruits      
+int CONS_NB_THREAD=3;
+int TAILLE_TAPIS = 15;
+int CIBLE_PRODUCTION=20;
+
+typedef struct
 {
-    char* fruit;
-} paquet;
+	char* nom;
+}paquet;
 
-
-/*
-    Tapis doit implémenter FIFO, qui est la file d'attente avancée, qui est le mode premier entré, premier sorti.
-    Il doit donc y avoir des opérations d’ajout et de suppression
-    En matière de sécurité des données, des variables mutex et de condition sont requises
-*/
-typedef struct tapis            //Definition de tapis   
+typedef struct
 {
-    paquet** fruits;            //tableau de fruits
-    int capacity;               //maxsize
-    int nb;                     //size actuel
-    int index;                  //L'index de paquet à retirer
-    pthread_mutex_t mutex;      
-    pthread_cond_t cv_Full;      
-    pthread_cond_t cv_Empty;     
+	paquet** tab;
+	size_t allocsize;
+	size_t index;
+	size_t sz;
+	pthread_mutex_t mutex;
+	pthread_cond_t  cv_full;
+	pthread_cond_t  cv_empty ;
 }tapis;
 
-paquet* makepaquet(char* nom)       //Initialiser une paquet
+char* newcopy(const char* src)
 {
-    paquet* p = (paquet*)malloc(sizeof(paquet));
-    p->fruit = nom;        
-    return p;
+	size_t n = strlen(src);
+	char* dest = malloc((strlen(src)+1)*sizeof(char));
+	for(size_t i=0; i <=n; ++i) 
+    {
+        dest[i]=src[i];
+    }
+	return dest;
 }
 
-tapis* maketapis(int maxsize)               //Initialliser tapis
+void mkpaquet(paquet* p, char* str)
 {
-    tapis* t = (tapis*)malloc(sizeof(tapis));
-    t->capacity  = maxsize;
-    t->nb = 0;
-    t->index = 0;
-    t->fruits = (paquet**)malloc(maxsize*sizeof(paquet*));
-    if (pthread_mutex_init(&t->mutex, NULL) != 0)
-    {
-		printf("\n mutex init failed\n");
-    }
-
-	if (pthread_cond_init(&t->cv_Full, NULL) != 0)
-    {
-		printf("\n cv_Full init failed\n");
-    }
-
-
-	if (pthread_cond_init(&t->cv_Empty, NULL) != 0)
-    {
-		printf("\n cv_Empty init failed\n");
-    }
-    return t;
+	p->nom = newcopy(str);
 }
 
-void free_paquet(paquet* p)     
+void free_paquet(paquet*p)
 {
-    if (p != NULL)
+	if (p !=NULL)
     {
-        free(p->fruit);
-        free(p);
-    }
+	    free(p->nom);
+	    free(p);
+	}
 }
 
-void free_tapis(tapis* t)       
+void mktapis(size_t maxsize, tapis* t)
 {
-    if (t != NULL)
+	t->allocsize= maxsize;
+	t->index=0;
+	t->sz=0;
+	t->tab=malloc(maxsize*sizeof(paquet));
+	pthread_mutex_init(&t->mutex, NULL);
+    pthread_cond_init(&t->cv_empty, NULL);
+	pthread_cond_init(&t->cv_full, NULL);
+}
+
+//Only used in push and pop, so dont need to use mutex
+int empty(tapis* t)
+{
+	return (t->sz==0);
+}
+
+int full(tapis* t)
+{
+	return (t->sz ==t->allocsize);
+}
+
+size_t size(tapis* t)
+{
+	pthread_mutex_lock(&t->mutex);
+	size_t res = t->sz;
+	pthread_mutex_unlock(&t->mutex);
+	return res;
+}
+
+
+char* stringConcat(char* src1, char* src2)
+{
+	int lengthSrc1 = strlen(src1);
+	int lengthSrc2 = strlen(src2);
+	char* res = malloc ((lengthSrc1+lengthSrc2+1)*sizeof(char));
+	for (int j=0; j < lengthSrc1; j++)
     {
-        for (int i = 0 ; i < t->nb; i++)
-        {
-            free_paquet(t->fruits[i]);
-        }
+        res [j] = src1[j];
     }
-    free(t->fruits);
-    pthread_mutex_destroy(&t->mutex);
-    pthread_cond_destroy(&t->cv_Full);
-    pthread_cond_destroy(&t->cv_Empty);
-    free(t);
-}
-
-bool isEmpty(tapis* t)
-{
-    return (t->nb == 0);
-}
-
-bool isFull(tapis* t)
-{
-    return (t->nb == t->capacity);
-}
-
-void ensureCapacity(tapis *t)
-{
-    if (t->nb == t->capacity - 1)
+		
+	for (int j = 0; src2[j] != '\0'; ++j, ++lengthSrc1)
     {
-        t->capacity = t->capacity * 2;
-        paquet** temp_p = (paquet**) malloc (t->capacity*sizeof(paquet*));
-        for (int i = 0; i < t->nb; i ++)
-        {
-            temp_p[i] = t->fruits[i];
-        }
-        free(t->fruits);
-        t->fruits = temp_p;
+	    res [lengthSrc1] = src2[j];
     }
+	
+	res[lengthSrc1]='\0';
+	return res;
 }
 
-void pushTapis(tapis* t, paquet* p)    
-{
-    pthread_mutex_lock(&t->mutex);
-    while (isFull(t))                   
-    {
-        pthread_cond_wait(&t->cv_Full, &t->mutex);
-    }
-
-    if (isEmpty(t))
-    {
-        pthread_cond_signal(&t->cv_Empty);
-    }
-    ensureCapacity(t);            
-    t->fruits[t->nb] = p;
-    t->nb++;
-    pthread_mutex_unlock(&t->mutex);    
+int digitsInANumber(int i){
+	int count =0;
+	while(i != 0)
+	{
+		count++;
+		i /= 10;
+	}
+	return count;
 }
 
-paquet* popTapis(tapis* t)
+char* intToString(int i)
 {
-    pthread_mutex_lock(&t->mutex);
-    while (isEmpty(t))                  
-    {
-        pthread_cond_wait(&t->cv_Empty, &t->mutex);
-    }
-
-    if (isFull(t))
-    {
-        pthread_cond_signal(&t->cv_Full);
-    }
-
-    paquet* p = t->fruits[t->index];
-    t->fruits[t->index] = NULL;
-    t->index++;
-    t->nb--;
-
-    pthread_mutex_unlock(&t->mutex);    
-    return p;
+	char* res = malloc((digitsInANumber(i)+1)*sizeof(char));
+	sprintf(res, "%d", i);
+	return res;
 }
 
-size_t getNb(tapis* t)
+typedef struct
 {
-    pthread_mutex_lock(&t->mutex);
-    size_t sz = t->nb;
-    pthread_mutex_unlock(&t->mutex);
-    return sz;
-}
-
-typedef struct Producer
-{
-    char* paquet_nom;       
-    int nb_target;          
-    int nb_actuel;          
-    tapis* t;               
+	char* nom_de_produit;
+	int nb_target;           
+	int nb_actuel;
+	tapis* tapis;
 }Producer;
 
-typedef struct Consumer
+void freeProducer(Producer* t)
 {
-    int id;
-    int counter;
-    tapis* t;
+	if(t != NULL)
+    {
+		free(t->nom_de_produit);
+		free(t);
+	}
+}
+
+typedef struct{
+	int id;
+	int* compteur;
+	tapis* tapis;
 }Consumer;
 
-Producer* creatProducer(char* fruit, int target, tapis* t)
-{
-    Producer* p = (Producer*)malloc(sizeof(Producer));
-    p->paquet_nom = fruit;
-    p->t = t;
-    p->nb_target = target;
-    p->nb_actuel = 0;
-    return p;
+paquet* pushTapis(tapis* t, int* compt){
+	pthread_mutex_lock(&t->mutex);
+	while(empty(t)) pthread_cond_wait(&t->cv_empty , &t->mutex);
+	if(full(t)) pthread_cond_signal(&t->cv_full);
+	paquet* p = t->tab[t->index];
+	t->sz--;
+	t->index=(t->index+1)%t->allocsize;
+	(*compt)--;
+	pthread_mutex_unlock(&t->mutex);
+	return p;
 }
 
-Consumer* creatConsumer(int id, int target, tapis* t)
-{
-    Consumer* c = (Consumer*)malloc(sizeof(Consumer));
-    c->counter = target;
-    c->t = t;
-    c->id = id;
-    return c;
+void popTapis(tapis*t, paquet* p){
+	pthread_mutex_lock(&t->mutex);
+	while(full(t)) pthread_cond_wait(&t->cv_full , &t->mutex);
+	if(empty(t)) pthread_cond_signal(&t->cv_empty);
+	t->tab[(t->index+t->sz)%t->allocsize]=p;
+	t->sz++;
+	pthread_mutex_unlock(&t->mutex);
 }
 
-void* ProWork(void* args)
-{
-    Producer* p = args;
-    while(p->nb_actuel != p->nb_target)
-    {
-        paquet* pa = makepaquet(p->paquet_nom);
-        pushTapis(p->t,pa);
-        p->nb_actuel++;
-        printf("Producer created %d %s(s), it's index is %d, now tapis have %d fruits \n",p->nb_actuel,p->paquet_nom, p->t->nb+p->t->index, p->t->nb);
-    }
-    printf("Production of %s is finished ! \n", p->paquet_nom);
-    return 0;
+void* prodWork(void* args){
+	Producer* prod = args;
+
+	while (prod->nb_target!=prod->nb_actuel){
+		paquet* p = malloc(sizeof(paquet));
+		mkpaquet(p, stringConcat(prod->nom_de_produit,intToString(prod->nb_actuel)));
+		popTapis(prod->tapis, p);
+		printf("Producer created %s\n", p->nom);
+		prod->nb_actuel++;
+	}
+	free(prod);
+	return 0;
 }
 
-paquet* copyPaquet(paquet* p)
-{
-    paquet* pp = (paquet*)malloc(sizeof(paquet));
-    pp->fruit = p->fruit;
-    return pp;
+void* consWork(void* args){
+	Consumer* cons = (Consumer*)args;
+
+	while((*(cons->compteur))>0){
+		paquet* p =pushTapis(cons->tapis,cons->compteur);
+		printf("C%d mange %s\n", cons->id, p->nom);
+		free_paquet(p);
+	}
+	free(cons);
+	return 0;
 }
 
-void* ConsWork(void* args)
-{
-    Consumer* c = args;
-    printf("Consumer%d start \n", c->id);
-    while(c->counter > 0)
-    {
-        paquet* p = popTapis(c->t);
-        if (p != NULL)
-        {
-            printf("Consumer%d mange un(e) %s, il reste %d, it's Number %d of tapis, tapis have %d reste !!!\n", c->id, p->fruit, c->counter-1, c->t->index, c->t->nb - c->t->index);
-            c->counter--;
-        }
-        else
-            printf("\n\nPOP WRONG !\n\n");
 
-    }
-    printf("Consumer%d is finished ! \n", c->id);
-    return 0;
-}
+int main(void) {
 
-void PrintTapis(tapis* t)
-{
-    for (int i = 0 ; i < t->nb; i++)
-    {
-        printf("Numer %i production is %s \n", i, t->fruits[i]->fruit);
-    }
-}
-
-int main()
-{
-    pthread_t th_Producer[5];   
-    pthread_t th_Consumer[4];   
-    tapis* t = maketapis(1);   
-
-    int terminationCons = 0;
-
-    char * produits[5]={"pomme", "poire", "orange", "kiwi", "banane"};  //Types de fruits
-
-    for (int i = 0 ; i < 5; i++)    
-    {
-        Producer* p = creatProducer(produits[i], 7, t);         
-        pthread_create(&th_Producer[i],NULL,ProWork,p);         
-    }
-    
-    
-    for (int i = 0 ; i < 4; i++)    
-    {
-        Consumer* c = creatConsumer(i, 5, t);
-        pthread_create(&th_Consumer[i], NULL, ConsWork, c);
-    }
-    
+	/*** INITIALISATION DES VARIABLES***/
+	pthread_t tidPROD[PROD_NB_THREAD];
+	pthread_t tidCONS[CONS_NB_THREAD];
+	int prodCreat =0;
+	int consCreat =0;
+	int terminaisonsPROD = 0;
+	int terminaisonsCONS = 0;
+	tapis tapis;
+	int compteur = CIBLE_PRODUCTION*PROD_NB_THREAD;
+	pthread_mutex_t  comptLock;
+	pthread_mutex_init(&comptLock, NULL);
 
 
-    for (int i = 0; i < 5; i++) 
-    {
-        pthread_join(th_Producer[i], NULL);
-    }
+	mktapis(TAILLE_TAPIS,&tapis);
 
-    
+	while(prodCreat < PROD_NB_THREAD){
+		Producer*args = malloc(sizeof (Producer));
+		args->nom_de_produit=produits[prodCreat];
+		args->nb_actuel=0;
+		args->nb_target= CIBLE_PRODUCTION;
+		args->tapis=&tapis;
+		pthread_create(&(tidPROD[prodCreat]), NULL, prodWork, args);
+		prodCreat++;
+	}
 
-    for (int i = 0; i < 5; i++) 
-    {
-        pthread_join(th_Consumer[i], NULL);
-    }
-    
+	while(consCreat < CONS_NB_THREAD){
+		Consumer* args = malloc(sizeof (Consumer));
+		args->compteur=&compteur;
+		args->id=consCreat;
+		args->tapis=&tapis;
+		pthread_create(&(tidCONS[consCreat]), NULL, consWork, args);
+		consCreat++;
+	}
 
-    printf("All Done \n");
-    free_tapis(t);
+	while(terminaisonsPROD < PROD_NB_THREAD){
+		pthread_join(tidPROD[terminaisonsPROD],NULL);
+		terminaisonsPROD++;
+	}
 
-    return 0;
+	while(terminaisonsCONS < CONS_NB_THREAD){
+		pthread_join(tidCONS[terminaisonsCONS],NULL);
+		terminaisonsCONS++;
+	}
+
+	free(tapis.tab);
+	pthread_cond_destroy(&tapis.cv_full);
+	pthread_mutex_destroy(&tapis.mutex);
+	printf("All Done\n");
+	return 0;
 }
