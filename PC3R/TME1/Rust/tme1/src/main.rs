@@ -1,71 +1,112 @@
 use std::collections::VecDeque;
-
+use std::sync::{Arc, Mutex, Condvar};
+use std::thread;
 
 const NB_PRODUCTEUR : usize = 5;
 const NB_CONSOMMATEUR : usize = 4;
 const CIBLE_PRODUCTEUR : usize = 2;
 const TAILLE_TAPIS : usize = 10;
 
-
 struct Paquet {
     name: String
 }
 
-
 struct Tapis {
-    size : usize,
-    capacity : usize,
-    tapis : VecDeque<Paquet>
+    tapis : VecDeque<Paquet>,
+    cv : Condvar,
 }
 
 struct Compteur {
-    count : usize
+    count : usize,
 }
 
-fn enfiler(){
-
-}
-
-fn defiler(){
-
+fn desc_compteur(c: &mut Compteur){
+    c.count -= 1;
 }
 
 
-fn main(){
+fn enfiler(tapis: &Arc<(Mutex<Tapis>, Condvar)>, paquet: Paquet) {
+    let (lock, cvar) = &**tapis;
+    let mut tapis_locked = lock.lock().unwrap();
 
-
-    let tapis = Tapis{
-        size : 0,
-        capacity : TAILLE_TAPIS,
-        tapis : VecDeque::new()
-    };
-
-    let compteur = Compteur{
-        count : NB_PRODUCTEUR * CIBLE_PRODUCTEUR
-    };
-
-    for i in 0..NB_PRODUCTEUR{
-
+    while tapis_locked.tapis.len() == TAILLE_TAPIS {
+        tapis_locked = cvar.wait(tapis_locked).unwrap();
     }
 
-    for i in 0..NB_CONSOMMATEUR{
-        
+    tapis_locked.tapis.push_back(paquet);
+    cvar.notify_one();
+}
+
+
+fn defiler(tapis: &Arc<(Mutex<Tapis>, Condvar)>) -> Option<Paquet> {
+    let (lock, cvar) = &**tapis;
+    let mut tapis_locked = lock.lock().unwrap();
+
+    while tapis_locked.tapis.is_empty() {
+        tapis_locked = cvar.wait(tapis_locked).unwrap();
     }
 
-    for i in 0..NB_PRODUCTEUR{
+    let paquet = tapis_locked.tapis.pop_front();
+    cvar.notify_one();
+    paquet
+}
 
+
+fn main() {
+    let tapis = Arc::new((
+        Mutex::new(Tapis {
+            tapis: VecDeque::new(),
+            cv: Condvar::new(),
+        }),
+        Condvar::new(),
+    ));
+
+    let compteur = Arc::new(Mutex::new(Compteur {
+        count: NB_PRODUCTEUR * CIBLE_PRODUCTEUR,
+    }));
+
+    // Création des threads producteurs
+    let mut producteurs = vec![];
+    for i in 0..NB_PRODUCTEUR {
+        let tapis_clone = Arc::clone(&tapis);
+        producteurs.push(thread::spawn(move || {
+            // Du travail des producteurs
+            for _ in 0..CIBLE_PRODUCTEUR {
+                let paquet = Paquet { name: format!("Produit {} du Producteur {}", i, i) };
+                enfiler(&tapis_clone, paquet);
+            }
+        }));
     }
 
-    for i in 0..NB_CONSOMMATEUR{
-        
+    // Création des threads consommateurs
+    let mut consommateurs = vec![];
+    for i in 0..NB_CONSOMMATEUR {
+        let tapis_clone = Arc::clone(&tapis);
+        let compteur_clone = Arc::clone(&compteur);
+        consommateurs.push(thread::spawn(move || {
+        // Du travail des consommateurs
+            while {
+                let mut count = compteur_clone.lock().unwrap();
+                if count.count > 0 {
+                    desc_compteur(&mut *count);
+                    true
+                } else {
+                    false
+                }
+            } {
+                if let Some(paquet) = defiler(&tapis_clone) {
+                    println!("Consommateur {} a consommé {}", i, paquet.name);
+                }
+            }
+        }));
     }
 
-
-
-
-
-
-
-
+    // Attendre la fin des threads
+    for producteur in producteurs {
+        producteur.join().unwrap();
+    }
+    for consommateur in consommateurs {
+        consommateur.join().unwrap();
+    }
 }
 
