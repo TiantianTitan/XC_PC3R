@@ -2,9 +2,12 @@ use std::collections::VecDeque;
 use std::sync::{Arc, Mutex, Condvar};
 use std::thread;
 
-const NB_PRODUCTEUR : usize = 5;
-const NB_CONSOMMATEUR : usize = 4;
-const CIBLE_PRODUCTEUR : usize = 2;
+const PRODUITS: [&'static str; 10] = ["pomme","poire","banane","orange"
+                                    ,"kiwi","peche","raisin", "ananas",
+                                    "abricot","mangue"];
+const NB_PRODUCTEUR : usize = 4;
+const NB_CONSOMMATEUR : usize = 5;
+const CIBLE_PRODUCTEUR : usize = 4;
 const TAILLE_TAPIS : usize = 10;
 
 struct Paquet {
@@ -13,7 +16,6 @@ struct Paquet {
 
 struct Tapis {
     tapis : VecDeque<Paquet>,
-    cv : Condvar,
 }
 
 struct Compteur {
@@ -56,7 +58,6 @@ fn main() {
     let tapis = Arc::new((
         Mutex::new(Tapis {
             tapis: VecDeque::new(),
-            cv: Condvar::new(),
         }),
         Condvar::new(),
     ));
@@ -67,12 +68,13 @@ fn main() {
 
     // Création des threads producteurs
     let mut producteurs = vec![];
-    for i in 0..NB_PRODUCTEUR {
+    for i in 1..NB_PRODUCTEUR+1 {
         let tapis_clone = Arc::clone(&tapis);
         producteurs.push(thread::spawn(move || {
             // Du travail des producteurs
-            for _ in 0..CIBLE_PRODUCTEUR {
-                let paquet = Paquet { name: format!("Produit {} du Producteur {}", i, i) };
+            for j in 1..CIBLE_PRODUCTEUR+1 {
+                let paquet = Paquet { name: format!("{} No.{}", PRODUITS[i],j.to_string()) };
+                println!("Producteur {} produit {}", i.to_string(),paquet.name);
                 enfiler(&tapis_clone, paquet);
             }
         }));
@@ -80,7 +82,7 @@ fn main() {
 
     // Création des threads consommateurs
     let mut consommateurs = vec![];
-    for i in 0..NB_CONSOMMATEUR {
+    for i in 1..NB_CONSOMMATEUR+1 {
         let tapis_clone = Arc::clone(&tapis);
         let compteur_clone = Arc::clone(&compteur);
         consommateurs.push(thread::spawn(move || {
@@ -93,9 +95,10 @@ fn main() {
                 } else {
                     false
                 }
-            } {
+            }
+            {
                 if let Some(paquet) = defiler(&tapis_clone) {
-                    println!("Consommateur {} a consommé {}", i, paquet.name);
+                    println!("C {} mange {}", i.to_string(), paquet.name.to_string());
                 }
             }
         }));
