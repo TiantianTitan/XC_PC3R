@@ -1,3 +1,12 @@
+/**
+* <code> main.rs </code> 
+* @author Haotian XUE & HeJun CAO
+* @date 25 janv. 2024
+* @Description
+* Ce programme est écrit en langage Rust. Il illustre un modèle classique de producteurs-consommateurs dans un environnement multithreadé, en utilisant les fonctionnalités de synchronisation de Rust pour gérer un accès sécurisé et coordonné à un tampon partagé.
+*/
+
+
 use std::collections::VecDeque;
 use std::sync::{Arc, Mutex, Condvar};
 use std::thread;

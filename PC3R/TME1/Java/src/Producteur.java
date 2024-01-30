@@ -1,4 +1,12 @@
 
+/**
+* <code> Producteur.java </code> 
+* @author Haotian XUE & HeJun CAO
+* @date 25 janv. 2024
+* @Description
+* La classe Producteur.java représente un producteur dans un scénario de production-consumption multithread. Chaque Producteur produit un certain nombre de Paquets et les ajoute à un tampon partagé (le tapis).
+*/
+
 public class Producteur extends Thread implements Runnable {
 
 	private String nameP;
@@ -29,7 +37,5 @@ public class Producteur extends Thread implements Runnable {
 		return this.nameP;
 	}
 	
-	
 
-	
 }

@@ -1,4 +1,12 @@
 
+/**
+* <code> Consommateur.java </code> 
+* @author Haotian XUE & HeJun CAO
+* @date 25 janv. 2024
+* @Description
+* La classe Consommateur.java représente un consommateur dans un scénario producteur-consommateur. Chaque instance de Consommateur fonctionne comme un thread qui consomme des objets Paquet d'un tapis partagé jusqu'à ce que le compteur atteigne zéro.
+*/
+
 public class Consommateur extends Thread implements Runnable{
 
 	private int id;
@@ -31,16 +39,10 @@ public class Consommateur extends Thread implements Runnable{
 		}
 	}
 
-	
 
 	public int getID() {
 		return this.id;
 	}
-
-
-	
-	
-	
 
 
 }

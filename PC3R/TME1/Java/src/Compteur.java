@@ -1,4 +1,13 @@
 
+
+/**
+* <code> Compteur.java </code> 
+* @author Haotian XUE & HeJun CAO
+* @date 25 janv. 2024
+* @Description
+*  La classe Compteur est conçue pour gérer une valeur de comptage. 
+*/
+
 public class Compteur {
 
 	int count;

@@ -1,7 +1,16 @@
 
+
+/**
+* <code> Main.java </code> 
+* @author Haotian XUE & HeJun CAO
+* @date 25 janv. 2024
+* @Description
+* Ce programme crée un environnement de production-consommation où plusieurs threads producteurs génèrent des éléments et les placent dans un tampon partagé, et plusieurs threads consommateurs les retirent de ce tampon. Le programme s'assure que tous les threads ont terminé leur travail avant de se terminer lui-même.
+*/
+
+
 public class Main {
 
-	
 	public static void main(String [] args){
 
         final String[] produits = {"pomme", "poire", "orange", "kiwi", "banane"};
@@ -47,13 +56,5 @@ public class Main {
 		}
 
     }
-	
-	
-	
-	
-	
-	
-	
-	
 	
 }

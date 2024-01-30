@@ -1,4 +1,14 @@
 
+
+/**
+* <code> Tapis.java </code> 
+* @author Haotian XUE & HeJun CAO
+* @date 25 janv. 2024
+* @Description
+* Tapis est une implémentation de tampon partagé pour le modèle de production-consommation, où les producteurs placent des Paquets dans le tampon et les consommateurs les retirent. La classe utilise des méthodes synchronisées pour assurer une manipulation sûre du tampon dans un environnement multithread.
+*/
+
+
 public class Tapis {
 
 	private int size;
@@ -62,16 +72,5 @@ public class Tapis {
 	void sizeAsc() {
 		this.size++;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 }

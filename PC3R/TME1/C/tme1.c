@@ -1,11 +1,13 @@
-/*
-Author : 
-	Haotian Xue
-	Hejun Cao
-
-Date : 
-	30/01/2024	
+/**
+* <code> tme1.c </code> 
+* @author HeJun CAO & Haotian XUE
+* @date 25 janv. 2024
+* @Description
+*  Ce programme illustre une implémentation multithread du problème de producteurs-consommateurs en C en utilisant un tampon partagé, avec une attention particulière à la synchronisation et la gestion de la mémoire.
 */
+
+
+
 #include<stdio.h>
 #include<string.h>
 #include<pthread.h>
