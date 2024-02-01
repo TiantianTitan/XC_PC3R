@@ -9,30 +9,27 @@
 
 #ifndef PAQUET_H_
 #define PAQUET_H_
+#include "outil.h"
 
-
-typedef struct paquet
+typedef struct
 {
-    char* name;
-} paquet;
+	char* nom;
+}paquet;
 
 
-char* creatCopy(const char* chaine){
-    size_t size = strlen(chaine);
-    // size + 1 -> str + "\0"
-    char* copy = malloc(sizeof(char)*(size+1));
-    for(int i = 0; i < size+1 ; i++){
-        copy[i] = chaine[i];
-    }
-    return copy;
+
+void mkpaquet(paquet* p, char* str)
+{
+	p->nom = newcopy( str );
 }
 
-void createPaquet(paquet * p,const char* chaine);
-void freePaquet(paquet * p);
-
-
-
-
-
+void free_paquet(paquet* p)
+{
+	if (p != NULL)
+    {
+	    free( p->nom );
+	    free( p );
+	}
+}
 
 #endif /* PAQUET_H_ */

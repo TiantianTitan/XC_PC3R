@@ -6,24 +6,24 @@
 *
 */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include "paquet.h"
+// #include <stdio.h>
+// #include <stdlib.h>
+// #include <string.h>
+// #include "paquet.h"
 
 
 
 
-void createPaquet(paquet * p,const char* chaine){
-    p->name = creatCopy(chaine);
-}
+// void createPaquet(paquet * p,const char* chaine){
+//     p->name = (chaine);
+// }
 
-void freePaquet(paquet * p){
-    if(!p){
-        free(p->name);
-        free(p);
-    }
-}
+// void freePaquet(paquet * p){
+//     if(!p){
+//         free(p->name);
+//         free(p);
+//     }
+// }
 
 
 

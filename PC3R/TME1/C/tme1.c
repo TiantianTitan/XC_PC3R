@@ -67,7 +67,7 @@ void mktapis(size_t maxsize, tapis* t)
 	t->allocsize= maxsize;
 	t->index=0;
 	t->sz=0;
-	t->tab=malloc( maxsize*sizeof( paquet ) );
+	t->tab = (paquet**) malloc( maxsize*sizeof( paquet ) );
 	pthread_mutex_init( &t->mutex, NULL );
     pthread_cond_init( &t->cv_empty, NULL );
 	pthread_cond_init( &t->cv_full, NULL );
