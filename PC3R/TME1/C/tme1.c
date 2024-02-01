@@ -154,7 +154,7 @@ typedef struct
 	tapis* tapis;
 }Consumer;
 
-paquet* pushTapis(tapis* t, int* compt)
+paquet* popTapis(tapis* t, int* compt)
 {
 	pthread_mutex_lock(&t->mutex);
 	while(empty(t)) 
@@ -175,7 +175,7 @@ paquet* pushTapis(tapis* t, int* compt)
 	return p;
 }
 
-void popTapis(tapis*t, paquet* p)
+void pushTapis(tapis*t, paquet* p)
 {
 	pthread_mutex_lock(&t->mutex);
 	while(full(t)) 
@@ -200,7 +200,7 @@ void* prodWork(void* args)
 	{
 		paquet* p = malloc(sizeof(paquet));
 		mkpaquet(p, ConcatStr( prod->nom_de_produit, IntToStr( prod->nb_actuel ) ) );
-		popTapis(prod->tapis, p);
+		pushTapis(prod->tapis, p);
 		printf("Producer created %s\n", p->nom);
 		prod->nb_actuel++;
 	}
@@ -213,7 +213,7 @@ void* consWork(void* args){
 
 	while((*(cons->compteur))>0)
 	{
-		paquet* p = pushTapis( cons->tapis, cons->compteur );
+		paquet* p = popTapis( cons->tapis, cons->compteur );
 		printf("Consumer%d mange %s\n", cons->id, p->nom);
 		free_paquet(p);
 	}
