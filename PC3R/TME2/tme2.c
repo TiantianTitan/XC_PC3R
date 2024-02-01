@@ -6,74 +6,45 @@
 *
 */
 
-
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <pthread.h>
-#include "producer.h"
-#include "consumer.h"
+#include "tapis.h"
+#include "../ft_v1.0/include/fthread.h"
 
-char* produits[5]={"pomme", "poire", "orange", "kiwi", "banane"};
-int PROD_NB_THREAD=sizeof(produits)/sizeof(char*);
+// n threads producteurs qui fabriquent des paquets et les enfilents sur le tapis de production
+#define NB_THREADS_PRODUCTEUR 5
+// m threads consommateurs qui consomment les paquets depuis le tapis de consommation
+#define NB_THREADS_CONSOMMATEUR 4
+// p threads messagers qui transportent des paquets du tapis de production au tapis de consommation
+#define NB_THREADS_MESSAGE 7
+#define SIZE_TAPIS  5
 
-int CONS_NB_THREAD=3;
-int TAILLE_TAPIS = 15;
-int CIBLE_PRODUCTION=20;
+char * produits[5]={"pomme", "poire", "orange", "kiwi", "banane"};
 
 
 int main(){
 
-	/*** INITIALISATION DES VARIABLES***/
-	pthread_t tidPROD[PROD_NB_THREAD];
-	pthread_t tidCONS[CONS_NB_THREAD];
-	int prodCreat =0;
-	int consCreat =0;
-	int terminaisonsPROD = 0;
-	int terminaisonsCONS = 0;
-	tapis tapis;
-	int compteur = CIBLE_PRODUCTION*PROD_NB_THREAD;
-	pthread_mutex_t  comptLock;
-	pthread_mutex_init(&comptLock, NULL);
+    ft_scheduler_t scheduler_producteur = ft_scheduler_create();
+    ft_scheduler_t scheduler_consommateur = ft_scheduler_create();
+    ft_scheduler_t scheduler_messager = ft_scheduler_create();
 
 
-	mktapis(TAILLE_TAPIS,&tapis);
+    ft_event_t cv_producteur = ft_event_create(scheduler_producteur);
+    ft_event_t cv_consommateur = ft_event_create(scheduler_consommateur);
+    ft_event_t cv_messager = ft_event_create(scheduler_messager);
 
-	while(prodCreat < PROD_NB_THREAD)
-	{
-		Producer* p = malloc(sizeof (Producer));
-		p->nom_de_produit=produits[prodCreat];
-		p->nb_actuel=0;
-		p->nb_target= CIBLE_PRODUCTION;
-		p->tapis=&tapis;
-		pthread_create(&(tidPROD[prodCreat]), NULL, prodWork, p);
-		prodCreat++;
-	}
+    tapis tapisProd;
+    tapis tapisCond;
+    mktapis(SIZE_TAPIS,&tapisProd,&cv_producteur,"prod");
+    mktapis(SIZE_TAPIS,&tapisCond,&cv_consommateur,"cons");
+    
 
-	while(consCreat < CONS_NB_THREAD)
-	{
-		Consumer* c = malloc(sizeof (Consumer));
-		c->compteur=&compteur;
-		c->id=consCreat;
-		c->tapis=&tapis;
-		pthread_create(&(tidCONS[consCreat]), NULL, consWork, c);
-		consCreat++;
-	}
 
-	while(terminaisonsPROD < PROD_NB_THREAD)
-	{
-		pthread_join(tidPROD[terminaisonsPROD],NULL);
-		terminaisonsPROD++;
-	}
 
-	while(terminaisonsCONS < CONS_NB_THREAD)
-	{
-		pthread_join(tidCONS[terminaisonsCONS],NULL);
-		terminaisonsCONS++;
-	}
 
-	free(tapis.tab);
-	pthread_cond_destroy(&tapis.cv_full);
-	pthread_mutex_destroy(&tapis.mutex);
-	printf("All Done\n");
-	return 0;
+
 
 
 
