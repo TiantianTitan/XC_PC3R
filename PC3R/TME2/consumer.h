@@ -14,7 +14,7 @@ void* consWork(void* args){
 
 	while((*(cons->compteur))>0)
 	{
-		paquet* p = pushTapis( cons->tapis, cons->compteur );
+		paquet* p = popTapis( cons->tapis, cons->compteur );
 		printf("Consumer%d mange %s\n", cons->id, p->nom);
 		free_paquet(p);
 	}

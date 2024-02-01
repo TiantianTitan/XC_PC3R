@@ -27,7 +27,7 @@ void* prodWork(void* args)
 	{
 		paquet* p = (paquet*) malloc(sizeof(paquet));
 		mkpaquet(p, ConcatStr( prod->nom_de_produit, IntToStr( prod->nb_actuel ) ) );
-		popTapis(prod->tapis, p);
+		pushTapis(prod->tapis, p);
 		printf("Producer created %s\n", p->nom);
 		prod->nb_actuel++;
 	}

@@ -54,7 +54,7 @@ size_t size(tapis* t)
 	return res;
 }
 
-paquet* pushTapis(tapis* t, int* compt)
+paquet* popTapis(tapis* t, int* compt)
 {
 	pthread_mutex_lock(&t->mutex);
 	while(empty(t)) 
@@ -75,7 +75,7 @@ paquet* pushTapis(tapis* t, int* compt)
 	return p;
 }
 
-void popTapis(tapis*t, paquet* p)
+void pushTapis(tapis*t, paquet* p)
 {
 	pthread_mutex_lock(&t->mutex);
 	while(full(t)) 
