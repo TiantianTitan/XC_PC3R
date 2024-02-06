@@ -1,0 +1,304 @@
+<!-- Rationale -->
+<a name="container1055">
+<html>
+<title>2. Rationale</title>
+
+ <head>  <style type="text/css">
+pre { font-family: monospace }
+ tt { font-family: monospace }
+ code { font-family: monospace }
+ p.flushright {text-align: right }
+ p.flushleft {text-align: left }
+ span.sc { font-variant: small-caps }
+</style>
+ <body
+ bgcolor="white" text="black">
+ </head>
+
+<table width="100%">
+<tr><td bgcolor="#ffe4c4"><br>
+<font color="#800020">
+<center><font face='sans-serif' size='+10'><b>
+ 2. Rationale
+</b></font></center>
+</font>
+<br>
+</td></tr></table>
+
+
+<table cellpadding="3" width="100%"><tr>
+<td valign="top" bgcolor="#ffe4c4" width="180">
+
+<!-- Browsing -->
+<a name="container1231">
+<TABLE width='100%'>
+<TR><TD bgcolor='#800020'>
+<FONT face='sans-serif' size='+1'><B>
+<font color="#f7e0c0">
+Browsing</font>
+</B></FONT></TD></TR></TABLE><P>
+
+<table width="100%">
+<tr><th align="left" valign="top" colspan="1" rowspan="1">Home: </th><td align="right" colspan="1" rowspan="1"><a href="ft.html"><strong>Fair Threads in C</strong></a></td></tr>
+<tr><td align="left" colspan="1" rowspan="1"><br>
+</td></tr>
+<tr><th align="left" valign="top" colspan="1" rowspan="1">Previous chapter: </th><td align="right" colspan="1" rowspan="1"><a href="ft-1.html#container1043">Introduction</a></td></tr>
+<tr><th align="left" valign="top" colspan="1" rowspan="1">Next chapter: </th><td align="right" colspan="1" rowspan="1"><a href="ft-3.html#container1084">API Overview</a></td></tr>
+</table>
+</p><br>
+
+<!-- Rationale -->
+<a name="container1233">
+<TABLE width='100%'>
+<TR><TD bgcolor='#800020'>
+<FONT face='sans-serif' size='+1'><B>
+<font color="#f7e0c0">
+Rationale</font>
+</B></FONT></TD></TR></TABLE><P>
+
+<pre><font face="normal"><a href="ft-2.html#container1045">Synchronized Areas</a>
+<a href="ft-2.html#container1049">Cooperative Scheduling</a>
+<a href="ft-2.html#container1050">Preemptive Scheduling</a>
+<a href="ft-2.html#container1054">Automata</a>
+</font></pre></p><br>
+
+<!-- Chapters -->
+<a name="container1235">
+<TABLE width='100%'>
+<TR><TD bgcolor='#800020'>
+<FONT face='sans-serif' size='+1'><B>
+<font color="#f7e0c0">
+Chapters</font>
+</B></FONT></TD></TR></TABLE><P>
+
+<pre><font face="normal">1. <a href="ft-1.html#container1043">Introduction</a>
+2. <a href="ft-2.html#container1055">Rationale</a>
+3. <a href="ft-3.html#container1084">API Overview</a>
+4. <a href="ft-4.html#container1101">API</a>
+5. <a href="ft-5.html#container1111">Examples</a>
+6. <a href="ft-6.html#container1117">Related Work</a>
+7. <a href="ft-7.html#container1124">Conclusion</a>
+8. <a href="ft-8.html#container1222">Man Pages</a>
+</font></pre></p><br>
+</td>
+</td><td valign="top" width="100%">
+
+
+In <strong>FairThreads</strong>, schedulers can be seen as <em>synchronization servers</em>,
+in which linked threads automatically synchronize at the end of each
+instant. However, in order to synchronize,  linked
+threads must behave fairly and cooperate with the other threads by
+returning the control to the scheduler.  Thus, linked threads are
+basically cooperative threads. Schedulers can also be seen as <em>event servers</em> as they are in charge of broadcasting generated events
+to all the linked threads. In this way, a fair scheduler defines a
+kind of <em>synchronized area</em> made of cooperative threads running
+at the same pace, and communicating through broadcast events.
+
+
+<!-- Synchronized Areas -->
+<a name="container1045">
+<TABLE width='100%'>
+<TR><TD bgcolor='#ffe4c4'>
+<FONT face='sans-serif' size='+1'><B>
+<font color="#800020">
+Synchronized Areas</font>
+</B></FONT></TD></TR></TABLE><P>
+
+
+A synchronized area can quite naturally be defined to manage some
+shared data that has to be accessed by several threads. In order to get
+access to the data, a thread has first to link to the area, and then it
+becomes scheduled by the area and can thus get safe access to the data.
+Indeed, as the scheduling is cooperative, there is no risk for the thread 
+to be preempted during an access to the data. The use of a synchronized area
+is, in this case, an alternative to the use of locks.
+
+A synchronized area can also play the role of a location that threads can join
+when some kind of communication or synchronization is needed.
+
+
+
+<p>
+
+
+<strong>FairThreads</strong> allows programmers to decompose complex systems in several threads and areas
+to which threads can link dynamically, following their needs. Moreover, a thread
+can be unlinked, that is totally free from any synchronization provided by any
+schedulers defined in the system. Of course, unlinked threads cannot benefit from
+broadcast events. Unlinked threads are run in the preemptive context of the OS, and
+are thus just standard preemptive threads. Data shared by unlinked threads have to be
+protected by locks, in the standard way.
+
+</p>
+
+</p><br>
+
+
+
+<!-- Cooperative Scheduling -->
+<a name="container1049">
+<TABLE width='100%'>
+<TR><TD bgcolor='#ffe4c4'>
+<FONT face='sans-serif' size='+1'><B>
+<font color="#800020">
+Cooperative Scheduling</font>
+</B></FONT></TD></TR></TABLE><P>
+
+
+
+Basically, a linked fair thread is a cooperative thread which can
+synchronize with other fair threads using events and can communicate
+with them through values associated to these events.  The scheduler to
+which the fair thread is linked gives it the possibility to get the
+processor.  All threads linked to the scheduler get equal right to
+execute. More precisely, fair schedulers define <em>instants</em>
+during which all threads linked to it run up to their next cooperation
+point. There are only two kinds of cooperation points: explicit ones
+which are calls to the <font size="-1"><tt>cooperate()</tt></font> function, and implicit
+ones where threads are waiting for events.  A fair scheduler
+broadcasts events to all fair threads linked to it. Thus, all threads
+linked to the same scheduler see the presence and the absence of
+events in exactly the same way. Moreover, values associated to events
+are also broadcast. Actually, events are local to the scheduler in
+which they are created, and are non-persistent data which are reset at
+the beginning of each new instant.
+
+
+<!-- Modularity -->
+<a name="container1046">
+<h3><font color="#800020">
+Modularity</font>
+</h3><p>
+
+
+Events are a powerful synchronisation and communication mean which
+simplifies concurrent programming while reducing risks of deadlocks.
+Events are used when one wants one or more threads to wait for a
+condition, without polling a variable to determine when
+the condition is fulfilled. Broadcast is a mean to get modularity, as
+the thread which generates an event has nothing to know about
+potentially receivers of it. Fairness in event processing means that
+all threads waiting for an event always receive it during the same
+instant it is generated; thus, a thread leaving control on a
+cooperation point does not risk to loose an event generated later in
+the same instant.
+
+</p><br>
+
+
+
+<!-- Determinism -->
+<a name="container1047">
+<h3><font color="#800020">
+Determinism</font>
+</h3><p>
+
+
+Cooperative frameworks are less undeterministic than preemptive ones,
+as in cooperative frameworks preemption cannot occurs in an
+uncontrolled way. Actually, <strong>FairThreads</strong> puts the situation to an extreme
+point, when considering linked threads: linked threads are chosen for
+execution following a strict round-robin algorithm which leads to
+deterministic systems. This can be a great help in programming and
+debugging.
+
+</p><br>
+
+
+
+<!-- No Priorities -->
+<a name="container1048">
+<h3><font color="#800020">
+No Priorities</font>
+</h3><p>
+
+
+Priorities are meaningless for linked threads which always
+have equal rights to execute.  Absence of priorities also contributes
+to simplify programming. 
+
+</p><br>
+
+</p><br>
+
+
+
+<!-- Preemptive Scheduling -->
+<a name="container1050">
+<TABLE width='100%'>
+<TR><TD bgcolor='#ffe4c4'>
+<FONT face='sans-serif' size='+1'><B>
+<font color="#800020">
+Preemptive Scheduling</font>
+</B></FONT></TD></TR></TABLE><P>
+
+
+
+Basically, unlinked threads are standard native preemptive
+threads. They are introduced in <strong>FairThreads</strong> for two main reasons.  First,
+using unlinked threads, users can program non-blocking I/Os in a very
+simple way. Without this kind of I/Os, programming would become
+problematic.  Second, unlinked threads can be run by distinct
+processors. The use of unlinked threads is a plus in multiprocessors
+contexts.
+
+</p><br>
+
+
+
+<!-- Automata -->
+<a name="container1054">
+<TABLE width='100%'>
+<TR><TD bgcolor='#ffe4c4'>
+<FONT face='sans-serif' size='+1'><B>
+<font color="#800020">
+Automata</font>
+</B></FONT></TD></TR></TABLE><P>
+
+
+
+
+<p>
+ <strong>FairThreads</strong> proposes <em>automata</em> to deal with auxiliary tasks,
+such as waiting for an event to stop a thread, that do not need the
+full power of a dedicated native thread to execute.  An automaton is a
+special linked fair thread which executes using the native thread of
+the scheduler to which it is linked. Thus, an automaton does not have
+its own execution stack that it could use to store its execution
+state. As a consequence, it can be implemented more efficiently than
+threads are.   </p>
+
+
+
+<p>
+ Basically, automata are lists of <em>states</em> which are
+elementary pieces of sequential code.  The current state is stored by
+the automaton and execution starts from it at the begining of the
+instant.  Execution leaves the current state when an explicit jump to
+another state is executed. When the state terminates without any
+explicit jump, execution automatically proceeds to
+the next state.  Execution of the automaton terminates when the last
+state is exited. Thus, the fine-grain sequentiality of execution inside states
+is not memorized by automata, only the coarse-grain sequentiality of
+states execution is. </p>
+
+
+
+<p>
+ Events can be used without restriction in automata. There is a special state
+to await an event: execution stays in this state until the event is generated.
+</p>
+
+</p><br>
+
+
+
+</td></tr></table>
+
+<hr width="100%">
+ <font size="-1">
+This page has been generated by <a href="http://www-sop.inria.fr/mimosa/fp/Scribe">Scribe</a>.
+<br>
+
+Last update <em>Tue Jun  4 10:09:20 2002</em></font>
+</html>

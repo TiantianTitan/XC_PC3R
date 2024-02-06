@@ -1,0 +1,152 @@
+<html>
+<title>scribe-document</title>
+
+ <head>  <style type="text/css">
+pre { font-family: monospace }
+ tt { font-family: monospace }
+ code { font-family: monospace }
+ p.flushright {text-align: right }
+ p.flushleft {text-align: left }
+ span.sc { font-variant: small-caps }
+</style>
+ <body
+ bgcolor="white" text="black">
+ </head>
+
+<table width="100%">
+<tr><td bgcolor="#ffe4c4"><br>
+<font color="#800020">
+<center><font face='sans-serif' size='+10'><b>
+<strong>Fair Threads in C</strong></b></font></center>
+</font>
+<center>
+<BR>
+<font size='+2'><i>F. Boussinot</i></font>
+<br>EMP-CMA/INRIA - MIMOSA Project
+<br>2004 route des Lucioles - BP 93
+<br>F-06902 Sophia Antipolis, Cedex
+<br><a href="mailto:Frederic.Boussinot@sophia.inria.fr">Frederic.Boussinot@sophia.inria.fr</a>
+
+</center><br>
+</td></tr></table>
+
+
+<table cellpadding="3" width="100%"><tr>
+<td valign="top" bgcolor="#ffe4c4" width="180">
+
+<!-- Chapters -->
+<a name="container1225">
+<TABLE width='100%'>
+<TR><TD bgcolor='#800020'>
+<FONT face='sans-serif' size='+1'><B>
+<font color="#f7e0c0">
+Chapters</font>
+</B></FONT></TD></TR></TABLE><P>
+
+<pre><font face="normal">1. <a href="ft-1.html#container1043">Introduction</a>
+2. <a href="ft-2.html#container1055">Rationale</a>
+3. <a href="ft-3.html#container1084">API Overview</a>
+4. <a href="ft-4.html#container1101">API</a>
+5. <a href="ft-5.html#container1111">Examples</a>
+6. <a href="ft-6.html#container1117">Related Work</a>
+7. <a href="ft-7.html#container1124">Conclusion</a>
+8. <a href="ft-8.html#container1222">Man Pages</a>
+</font></pre></p><br>
+</td>
+</td><td valign="top" width="100%">
+
+<!-- Abstract -->
+<a name="container1034">
+<TABLE width='100%'>
+<TR><TD bgcolor='#ffe4c4'>
+<FONT face='sans-serif' size='+1'><B>
+<font color="#800020">
+Abstract</font>
+</B></FONT></TD></TR></TABLE><P>
+
+
+
+<strong>FairThreads</strong> offers a very simple framework for concurrent and parallel
+programming.  Basically, it defines <em>schedulers</em> which are
+synchronization servers, to which threads can dynamically link or
+unlink.  All threads linked to the same scheduler are executed in a
+cooperative way, at the same pace, and they can synchronize and
+communicate using broadcast events.  Threads which are not linked to
+any scheduler are executed by the OS in a preemptive way, at their
+own pace. <strong>FairThreads</strong> offers programming constructs for linking and
+unlinking threads.  <strong>FairThreads</strong> is fully compatible with the standard <strong>Pthreads</strong>
+library and has a precise and clear semantics for its cooperative
+part; in particular, systems exclusively made of threads
+linked to one unique scheduler are actually completely deterministic.
+Special threads, called automata, are provided for short-lived small
+tasks or when a large number of tasks is needed. Automata do not need
+the full power of a native thread to execute and thus consume less
+resources.
+
+</p><br>
+<font size="-1">
+<p>
+<p class="flushleft">
+<a name="Bigloo">[1] <a href="http://www.inria.fr/mimosa/fp/Bigloo"><strong>Bigloo Web Site</strong></a>.
+</p>
+<p class="flushleft">
+<a name="CAML">[2] <a href="http://caml.inria.fr/ocaml/"><strong>CAML Web Site</strong></a>.
+</p>
+<p class="flushleft">
+<a name="JAVASOFT">[3] <a href="http://java.sun.com"><strong>Java Web Site</strong></a>.
+</p>
+<p class="flushleft">
+<a name="LinuxThreads">[4] <a href="http://pauillac.inria.fr/~xleroy/linuxthreads/"><strong>LinuxThreads Web Site</strong></a>.
+</p>
+<p class="flushleft">
+<a name="NGPT">[5] <a href="http://oss.software.ibm.com/developerworks/opensource/pthreads"><strong>Next Generation POSIX Threading Web Site</strong></a>.
+</p>
+<p class="flushleft">
+<a name="RP">[6] <a href="http://www.inria.fr/mimosa/rp"><strong>Reactive Programming Web Site</strong></a>.
+</p>
+<p class="flushleft">
+<a name="FairThreads">[7] Boussinot, F. -- <strong>Java Fair Threads</strong> -- <em>Inria research report, RR-4139</em>, 2001.
+</p>
+<p class="flushleft">
+<a name="Reactive-C">[8] Boussinot, F. -- <strong>Reactive C: An Extension of C to Program Reactive Systems</strong> -- <em>Software-Practice and Experience</em>, 21(4), 1991.
+</p>
+<p class="flushleft">
+<a name="CHORES">[9] Christopher, Thomas W. and Thiruvathukal, George K. -- <strong>High Performance Java Platform Computing: Multithreaded and Networked Programming</strong> -- <em>Sun Microsystems Press Java Series, Prentice Hall</em>, 2001.
+</p>
+<p class="flushleft">
+<a name="Presto">[10] Eager, Derek L. and Zahorjan, John -- <strong>Chores: Enhanced run-time support for shared memory parallel computing</strong> -- <em>ACM Transaction on Computer Systems</em>, 11(1), 1993.
+</p>
+<p class="flushleft">
+<a name="GPT">[11] Engelschall, Ralf S. -- <strong>Portable Multithreading</strong> -- <em>Proc. USENIX Annual Technical Conference</em>, San Diego, California, 2000.
+</p>
+<p class="flushleft">
+<a name="HALBWACHS">[12] Halbwachs, Nicolas -- <strong>Synchronous Programming of Reactive Systems</strong> -- <em>Kluwer Academic Publishers, New York</em>, 1993.
+</p>
+<p class="flushleft">
+<a name="HOLLUB">[13] Hollub, A. -- <strong>Taming Java Threads</strong> -- <em>Apress</em>, 2000.
+</p>
+<p class="flushleft">
+<a name="QUICKTHREADS">[14] Keppel, D. -- <strong>Tools and Techniques for Building Fast Portable Threads Packages</strong> -- <em>Technical Report UWCSE 93-05-06, University of Washington</em>, 1993.
+</p>
+<p class="flushleft">
+<a name="Filaments">[15] Lowenthal, David K and Freech, Vincent W. and Andrews, Gregory R. -- <strong>Efficient Support for Fine-Grain Parallelism on Shared-Memory Machines</strong> -- <em>TR 96-1, University of Arizona</em>, 1996.
+</p>
+<p class="flushleft">
+<a name="ModeAutomata">[16] Maraninchi, F. and Remond, Y. -- <strong>Running-Modes of Real-Time Systems: A Case-Study with Mode-Automata</strong> -- <em>Proc. 12th Euromicro Conference on Real-Time Systems, Stockholm, Sweden</em>, 2000.
+</p>
+<p class="flushleft">
+<a name="PTHREADS">[17] Nichols, B. and Buttlar, D. and Proulx Farrell J. -- <strong>Pthreads Programming</strong> -- <em>O'Reilly</em>, 1996.
+</p>
+<p class="flushleft">
+<a name="CML">[18] Reppy, John H. -- <strong>Concurrent Programming in ML</strong> -- <em>Cambridge University Press</em>, 1999.
+</p>
+</p>
+</font></td></tr></table>
+
+<hr width="100%">
+ <font size="-1">
+This page has been generated by <a href="http://www-sop.inria.fr/mimosa/fp/Scribe">Scribe</a>.
+<br>
+
+Last update <em>Tue Jun  4 10:09:20 2002</em></font>
+</html>

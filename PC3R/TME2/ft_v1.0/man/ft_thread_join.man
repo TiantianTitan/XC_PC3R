@@ -1,0 +1,124 @@
+.if t .wh -1.3i ^B
+.nr ^l \n(.l
+.ad b
+'\"	# Start an argument description
+.de AP
+.ie !"\\$4"" .TP \\$4
+.el \{\
+.   ie !"\\$2"" .TP \\n()Cu
+.   el          .TP 15
+.\}
+.ta \\n()Au \\n()Bu
+.ie !"\\$3"" \{\
+\&\\$1	\\fI\\$2\\fP	(\\$3)
+.\".b
+.\}
+.el \{\
+.br
+.ie !"\\$2"" \{\
+\&\\$1	\\fI\\$2\\fP
+.\}
+.el \{\
+\&\\fI\\$1\\fP
+.\}
+.\}
+..
+.de BS
+.br
+.mk ^y
+.nr ^b 1u
+.if n .nf
+.if n .ti 0
+.if n \l'\\n(.lu\(ul'
+.if n .fi
+..
+'\"	# BE - end boxed text (draw box now)
+.de BE
+.nf
+.ti 0
+.mk ^t
+.ie n \l'\\n(^lu\(ul'
+.el \{\
+.\"	Draw four-sided box normally, but don't draw top of
+.\"	box if the box started on an earlier page.
+.ie !\\n(^b-1 \{\
+\h'-1.5n'\L'|\\n(^yu-1v'\l'\\n(^lu+3n\(ul'\L'\\n(^tu+1v-\\n(^yu'\l'|0u-1.5n\(ul'
+.\}
+.el \}\
+\h'-1.5n'\L'|\\n(^yu-1v'\h'\\n(^lu+3n'\L'\\n(^tu+1v-\\n(^yu'\l'|0u-1.5n\(ul'
+.\}
+.\}
+.fi
+.br
+.nr ^b 0
+..
+'\"	# VS - start vertical sidebar
+'\"	# ^Y = starting y location
+'\"	# ^v = 1 (for troff;  for nroff this doesn't matter)
+..
+.TH ft_thread_join, 1
+.SH NAME
+ft_thread_join, ft_thread_join_n \- wait for termination of another thread
+.SS SYNOPSIS
+
+.Sp
+.nf
+\fB#include\fR <fthread.h>
+
+int \fBft_thread_join\fR   (ft_thread_t th);
+
+int \fBft_thread_join_n\fR (ft_thread_t th,int n);
+
+.Sp
+.fi
+.SS DESCRIPTION
+
+
+\fBft_thread_join\fR suspends the execution of the calling thread
+until the thread \fBth\fR terminates (either by reaching the end
+of the function it run, or by executing ft_exit) or is
+stopped (by ft_scheduler_stop).  If \fBth\fR is already
+terminated, the call immediately terminates.
+
+\fBft_thread_join_n (th,i)\fR waits for at most \fBi\fR
+instants for termination of \fBth\fR.
+
+.SS RETURN VALUES
+
+
+On success, the value 0 is returned. On error, a non-zero error code is returned.
+
+.SS ERRORS
+
+
+.RS 3
+.TP
+\&\fBBADCREATE\fR 
+The thread  \fBth\fR
+is not correctly created.
+.RE
+
+
+.RS 3
+.TP
+\&\fBBADLINK\fR 
+The calling thread is unlinked.
+.RE
+
+
+.RS 3
+.TP
+\&\fBTIMEOUT\fR 
+The timeout is reached before the thread is joined.
+.RE
+
+
+.SS SEE ALSO
+
+\fBft_thread_create\fR (3),
+\fBft_exit\fR (3),
+\fBft_scheduler_stop\fR (3).
+
+.SH AUTHOR
+
+

@@ -1,0 +1,248 @@
+<!-- Introduction -->
+<a name="container1043">
+<html>
+<title>1. Introduction</title>
+
+ <head>  <style type="text/css">
+pre { font-family: monospace }
+ tt { font-family: monospace }
+ code { font-family: monospace }
+ p.flushright {text-align: right }
+ p.flushleft {text-align: left }
+ span.sc { font-variant: small-caps }
+</style>
+ <body
+ bgcolor="white" text="black">
+ </head>
+
+<table width="100%">
+<tr><td bgcolor="#ffe4c4"><br>
+<font color="#800020">
+<center><font face='sans-serif' size='+10'><b>
+ 1. Introduction
+</b></font></center>
+</font>
+<br>
+</td></tr></table>
+
+
+<table cellpadding="3" width="100%"><tr>
+<td valign="top" bgcolor="#ffe4c4" width="180">
+
+<!-- Browsing -->
+<a name="container1226">
+<TABLE width='100%'>
+<TR><TD bgcolor='#800020'>
+<FONT face='sans-serif' size='+1'><B>
+<font color="#f7e0c0">
+Browsing</font>
+</B></FONT></TD></TR></TABLE><P>
+
+<table width="100%">
+<tr><th align="left" valign="top" colspan="1" rowspan="1">Home: </th><td align="right" colspan="1" rowspan="1"><a href="ft.html"><strong>Fair Threads in C</strong></a></td></tr>
+<tr><td align="left" colspan="1" rowspan="1"><br>
+</td></tr>
+<tr><th align="left" valign="top" colspan="1" rowspan="1">Previous chapter: </th><td align="right" colspan="1" rowspan="1"></td></tr>
+<tr><th align="left" valign="top" colspan="1" rowspan="1">Next chapter: </th><td align="right" colspan="1" rowspan="1"><a href="ft-2.html#container1055">Rationale</a></td></tr>
+</table>
+</p><br>
+
+<!-- Introduction -->
+<a name="container1228">
+<TABLE width='100%'>
+<TR><TD bgcolor='#800020'>
+<FONT face='sans-serif' size='+1'><B>
+<font color="#f7e0c0">
+Introduction</font>
+</B></FONT></TD></TR></TABLE><P>
+
+<pre><font face="normal"><a href="ft-1.html#container1038">Difficulties of Threads</a>
+<a href="ft-1.html#container1042">The Fair Threads Proposal</a>
+</font></pre></p><br>
+
+<!-- Chapters -->
+<a name="container1230">
+<TABLE width='100%'>
+<TR><TD bgcolor='#800020'>
+<FONT face='sans-serif' size='+1'><B>
+<font color="#f7e0c0">
+Chapters</font>
+</B></FONT></TD></TR></TABLE><P>
+
+<pre><font face="normal">1. <a href="ft-1.html#container1043">Introduction</a>
+2. <a href="ft-2.html#container1055">Rationale</a>
+3. <a href="ft-3.html#container1084">API Overview</a>
+4. <a href="ft-4.html#container1101">API</a>
+5. <a href="ft-5.html#container1111">Examples</a>
+6. <a href="ft-6.html#container1117">Related Work</a>
+7. <a href="ft-7.html#container1124">Conclusion</a>
+8. <a href="ft-8.html#container1222">Man Pages</a>
+</font></pre></p><br>
+</td>
+</td><td valign="top" width="100%">
+
+
+Threads are generally considered to be well adapted for systems made
+of heavy-computing tasks run in a preemptive context and needing few
+communications and synchronizations.  This is typically
+the case of Web servers, in which a thread (usually picked out from a
+pool of available threads) is associated to each new request. In such
+contexts, advantages of threads are clear:
+
+<ul>
+ <li> 
+Modularity is increased, as threads can be naturally used for
+coding independant sub-parts of the system.
+
+ <li>
+Programs can be run by multiprocessors machines without any change.
+Thus, multithreaded systems immediately take benefit from SMP
+architectures, which become now widely available.
+
+ <li>
+Blocking I/Os do not need special attention of any kind. Indeed, as the
+scheduler is preemptive, there is no risk that a thread blocked
+forever on an I/O operation will also block the rest of the system.
+
+</ul>
+
+
+
+<!-- Difficulties of Threads -->
+<a name="container1038">
+<TABLE width='100%'>
+<TR><TD bgcolor='#ffe4c4'>
+<FONT face='sans-serif' size='+1'><B>
+<font color="#800020">
+Difficulties of Threads</font>
+</B></FONT></TD></TR></TABLE><P>
+
+
+
+The benefit of using threads is less clear for systems made of tasks
+needing strong synchronizations or a lot of communications. Indeed, in
+a preemptive context, to communicate or to synchronize generally
+implies the need to protect some data involved in the communication or
+in the synchronization. Locks are often used for this purpose, but
+they have a cost and are error-prone (possibilities of deadlocks).
+
+
+<p>
+ Pure cooperative threads (sometimes called <em>green-threads</em>) are more adapted for highly communicating
+tasks. Indeed, data protection is no more needed, and one can avoid
+the use of locks. Moreover, cooperative threads have clear and simple
+semantics, and are thus easier to program and to port.  
+However, while cooperative threads can be efficiently implemented at
+user level, they cannot benefit from multiprocessor
+machines. Moreover, they need special means to deal with blocking
+I/O. </p>
+
+
+
+<p>
+ Actually, programming with threads is difficult because
+threads generally have very &quot;lose&quot; semantics. This is
+particularly true with preemptive threads because their semantics
+strongly relies on the scheduling policy.  The semantics of threads
+also depends on others aspects, as, for example, the way threads
+priorities are mapped at the kernel level. </p>
+
+
+
+<p>
+ Threads take time to create, and need a rather large amount of
+memory to execute. Moreover, the number of native threads than can be
+created is often limited by the system. Several techniques can be used
+to get round these problems, specially when large numbers of
+short-lived components are needed. Among these techniques are
+thread-pooling, to limit the number of created threads, and the use of
+small pieces of code, sometimes called &quot;chores&quot; or &quot;chunks&quot;, which can
+be executed in a simpler way than threads are.  </p>
+
+
+</p><br>
+
+
+
+<!-- The Fair Threads Proposal -->
+<a name="container1042">
+<TABLE width='100%'>
+<TR><TD bgcolor='#ffe4c4'>
+<FONT face='sans-serif' size='+1'><B>
+<font color="#800020">
+The Fair Threads Proposal</font>
+</B></FONT></TD></TR></TABLE><P>
+
+
+
+<strong>FairThreads</strong> proposes to overcome the difficulties of threads by giving users
+the possibility to chose the context, cooperative or preemptive, in
+which threads are executed.
+
+More precisely, <strong>FairThreads</strong> defines <em>schedulers</em> which are cooperative
+contexts to which threads can dynamically link or unlink.  All threads
+linked to the same scheduler are executed in a cooperative way, and at
+the same pace. Threads which are not linked to any scheduler are
+executed by the OS in a preemptive way, at their own pace. An
+important point is that <strong>FairThreads</strong> offers programming constructs for
+linking and unlinking threads.
+
+
+<p>
+
+
+<strong>FairThreads</strong> has the following main characteristics:
+
+<ul>
+ <li> It allows programs to benefit from multiprocessors
+machines. Indeed, schedulers and unlinked threads can be run in real
+parallelism, on distinct processors. 
+ <li> It allows users to stay in a purely cooperative context by
+linking all the threads to the same scheduler. In this case, systems
+are completely deterministic and have a simple and clear semantics. 
+ <li> Blocking I/Os can be implemented in a very simple way, using
+unlinked threads. 
+ <li> It defines <em>instants</em> shared by all the threads which
+are linked to the same scheduler. Thus, all threads linked to the same
+scheduler execute at the same pace, and there is an automatic
+synchronization at the end of each instant. 
+ <li> It introduces events which are instantaneously broadcast to
+all the threads linked to a scheduler; events are a modular and
+powerful mean for threads to synchronize and communicate.
+ <li> It defines <em>automata</em> to deal with small, short-lived
+tasks, which do not need the full power of native threads. Automata
+have lightweight implementation and are not submitted to some
+limitations that native threads have. 
+</ul>
+
+
+</p>
+
+
+
+<p>
+  This paper describes <strong>FairThreads</strong> in the context of C, implemented on top of the
+<strong>Pthreads</strong> library. </p>
+
+
+
+<p>
+ The rest of the paper is organized as follows: section 2 presents rationale for the
+design of <strong>FairThreads</strong>. An overwiew of the API of <strong>FairThreads</strong> is given in section 3. Section 4 contains
+the full API. Some examples are described in section 5. Related work is considered in section 6.
+Finally, section 7 concludes the paper.
+Man pages of <strong>FairThreads</strong> are given in annex. </p>
+
+
+</p><br>
+
+
+</td></tr></table>
+
+<hr width="100%">
+ <font size="-1">
+This page has been generated by <a href="http://www-sop.inria.fr/mimosa/fp/Scribe">Scribe</a>.
+<br>
+
+Last update <em>Tue Jun  4 10:09:20 2002</em></font>
+</html>

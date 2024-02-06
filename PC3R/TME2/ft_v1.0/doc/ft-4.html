@@ -1,0 +1,352 @@
+<!-- API -->
+<a name="container1101">
+<html>
+<title>4. API</title>
+
+ <head>  <style type="text/css">
+pre { font-family: monospace }
+ tt { font-family: monospace }
+ code { font-family: monospace }
+ p.flushright {text-align: right }
+ p.flushleft {text-align: left }
+ span.sc { font-variant: small-caps }
+</style>
+ <body
+ bgcolor="white" text="black">
+ </head>
+
+<table width="100%">
+<tr><td bgcolor="#ffe4c4"><br>
+<font color="#800020">
+<center><font face='sans-serif' size='+10'><b>
+ 4. API
+</b></font></center>
+</font>
+<br>
+</td></tr></table>
+
+
+<table cellpadding="3" width="100%"><tr>
+<td valign="top" bgcolor="#ffe4c4" width="180">
+
+<!-- Browsing -->
+<a name="container1241">
+<TABLE width='100%'>
+<TR><TD bgcolor='#800020'>
+<FONT face='sans-serif' size='+1'><B>
+<font color="#f7e0c0">
+Browsing</font>
+</B></FONT></TD></TR></TABLE><P>
+
+<table width="100%">
+<tr><th align="left" valign="top" colspan="1" rowspan="1">Home: </th><td align="right" colspan="1" rowspan="1"><a href="ft.html"><strong>Fair Threads in C</strong></a></td></tr>
+<tr><td align="left" colspan="1" rowspan="1"><br>
+</td></tr>
+<tr><th align="left" valign="top" colspan="1" rowspan="1">Previous chapter: </th><td align="right" colspan="1" rowspan="1"><a href="ft-3.html#container1084">API Overview</a></td></tr>
+<tr><th align="left" valign="top" colspan="1" rowspan="1">Next chapter: </th><td align="right" colspan="1" rowspan="1"><a href="ft-5.html#container1111">Examples</a></td></tr>
+</table>
+</p><br>
+
+<!-- API -->
+<a name="container1243">
+<TABLE width='100%'>
+<TR><TD bgcolor='#800020'>
+<FONT face='sans-serif' size='+1'><B>
+<font color="#f7e0c0">
+API</font>
+</B></FONT></TD></TR></TABLE><P>
+
+<pre><font face="normal"><a href="ft-4.html#container1085">Constructors</a>
+<a href="ft-4.html#container1086">Starting a Scheduler</a>
+<a href="ft-4.html#container1087">Control of Threads</a>
+<a href="ft-4.html#container1088">Broadcast of Events</a>
+<a href="ft-4.html#container1089">Cooperation</a>
+<a href="ft-4.html#container1090">Termination</a>
+<a href="ft-4.html#container1091">Generating Events</a>
+<a href="ft-4.html#container1092">Waiting Events</a>
+<a href="ft-4.html#container1093">Selecting Events</a>
+<a href="ft-4.html#container1094">Getting Generated Values</a>
+<a href="ft-4.html#container1095">Link and Unlink</a>
+<a href="ft-4.html#container1096">Current Thread and Scheduler</a>
+<a href="ft-4.html#container1097">Exit</a>
+<a href="ft-4.html#container1098">Locks</a>
+<a href="ft-4.html#container1099">Pthreads</a>
+<a href="ft-4.html#container1100">Macros for Automata</a>
+</font></pre></p><br>
+
+<!-- Chapters -->
+<a name="container1245">
+<TABLE width='100%'>
+<TR><TD bgcolor='#800020'>
+<FONT face='sans-serif' size='+1'><B>
+<font color="#f7e0c0">
+Chapters</font>
+</B></FONT></TD></TR></TABLE><P>
+
+<pre><font face="normal">1. <a href="ft-1.html#container1043">Introduction</a>
+2. <a href="ft-2.html#container1055">Rationale</a>
+3. <a href="ft-3.html#container1084">API Overview</a>
+4. <a href="ft-4.html#container1101">API</a>
+5. <a href="ft-5.html#container1111">Examples</a>
+6. <a href="ft-6.html#container1117">Related Work</a>
+7. <a href="ft-7.html#container1124">Conclusion</a>
+8. <a href="ft-8.html#container1222">Man Pages</a>
+</font></pre></p><br>
+</td>
+</td><td valign="top" width="100%">
+
+<!-- Constructors -->
+<a name="container1085">
+<TABLE width='100%'>
+<TR><TD bgcolor='#ffe4c4'>
+<FONT face='sans-serif' size='+1'><B>
+<font color="#800020">
+Constructors</font>
+</B></FONT></TD></TR></TABLE><P>
+
+<font size="-1"><pre>ft_scheduler_t <font color="red"><strong>ft_scheduler_create</strong></font> (void);
+ 
+ft_thread_t    <font color="red"><strong>ft_thread_create</strong></font>    (ft_scheduler_t scheduler,
+                                    void (*runnable)(void*),
+                                    void (*cleanup)(void*),
+                                    void *args);
+
+ft_thread_t    <font color="red"><strong>ft_automaton_create</strong></font> (ft_scheduler_t,
+                                    void (*automaton)(ft_thread_t),
+                                    void (*cleanup)(void*),
+                                    void *args);
+
+ft_event_t     <font color="red"><strong>ft_event_create</strong></font>     (ft_scheduler_t scheduler);
+</pre></font></p><br>
+
+<!-- Starting a Scheduler -->
+<a name="container1086">
+<TABLE width='100%'>
+<TR><TD bgcolor='#ffe4c4'>
+<FONT face='sans-serif' size='+1'><B>
+<font color="#800020">
+Starting a Scheduler</font>
+</B></FONT></TD></TR></TABLE><P>
+
+<font size="-1"><pre>int <font color="red"><strong>ft_scheduler_start</strong></font>  (ft_scheduler_t scheduler);
+</pre></font></p><br>
+
+<!-- Control of Threads -->
+<a name="container1087">
+<TABLE width='100%'>
+<TR><TD bgcolor='#ffe4c4'>
+<FONT face='sans-serif' size='+1'><B>
+<font color="#800020">
+Control of Threads</font>
+</B></FONT></TD></TR></TABLE><P>
+
+<font size="-1"><pre>int <font color="red"><strong>ft_scheduler_stop</strong></font>      (ft_thread_t thread);
+int <font color="red"><strong>ft_scheduler_suspend</strong></font>   (ft_thread_t thread);
+int <font color="red"><strong>ft_scheduler_resume</strong></font>    (ft_thread_t thread);
+</pre></font></p><br>
+
+<!-- Broadcast of Events -->
+<a name="container1088">
+<TABLE width='100%'>
+<TR><TD bgcolor='#ffe4c4'>
+<FONT face='sans-serif' size='+1'><B>
+<font color="#800020">
+Broadcast of Events</font>
+</B></FONT></TD></TR></TABLE><P>
+
+<font size="-1"><pre>int <font color="red"><strong>ft_scheduler_broadcast</strong></font>        (ft_event_t event);
+int <font color="red"><strong>ft_scheduler_broadcast_value</strong></font>  (ft_event_t event,void *value);
+</pre></font></p><br>
+
+<!-- Cooperation -->
+<a name="container1089">
+<TABLE width='100%'>
+<TR><TD bgcolor='#ffe4c4'>
+<FONT face='sans-serif' size='+1'><B>
+<font color="#800020">
+Cooperation</font>
+</B></FONT></TD></TR></TABLE><P>
+
+<font size="-1"><pre>int <font color="red"><strong>ft_thread_cooperate</strong></font>    (void);
+int <font color="red"><strong>ft_thread_cooperate_n</strong></font>  (int num);
+</pre></font></p><br>
+
+<!-- Termination -->
+<a name="container1090">
+<TABLE width='100%'>
+<TR><TD bgcolor='#ffe4c4'>
+<FONT face='sans-serif' size='+1'><B>
+<font color="#800020">
+Termination</font>
+</B></FONT></TD></TR></TABLE><P>
+
+<font size="-1"><pre>int <font color="red"><strong>ft_thread_join</strong></font>    (ft_thread_t thread);
+int <font color="red"><strong>ft_thread_join_n</strong></font>  (ft_thread_t thread,int timeout);
+</pre></font></p><br>
+
+<!-- Generating Events -->
+<a name="container1091">
+<TABLE width='100%'>
+<TR><TD bgcolor='#ffe4c4'>
+<FONT face='sans-serif' size='+1'><B>
+<font color="#800020">
+Generating Events</font>
+</B></FONT></TD></TR></TABLE><P>
+
+<font size="-1"><pre>int <font color="red"><strong>ft_thread_generate</strong></font>        (ft_event_t event);
+int <font color="red"><strong>ft_thread_generate_value</strong></font>  (ft_event_t event,void *value);
+</pre></font></p><br>
+
+<!-- Waiting Events -->
+<a name="container1092">
+<TABLE width='100%'>
+<TR><TD bgcolor='#ffe4c4'>
+<FONT face='sans-serif' size='+1'><B>
+<font color="#800020">
+Waiting Events</font>
+</B></FONT></TD></TR></TABLE><P>
+
+<font size="-1"><pre> 
+int <font color="red"><strong>ft_thread_await</strong></font>    (ft_event_t event);
+int <font color="red"><strong>ft_thread_await_n</strong></font>  (ft_event_t event,int timeout);
+</pre></font></p><br>
+
+<!-- Selecting Events -->
+<a name="container1093">
+<TABLE width='100%'>
+<TR><TD bgcolor='#ffe4c4'>
+<FONT face='sans-serif' size='+1'><B>
+<font color="#800020">
+Selecting Events</font>
+</B></FONT></TD></TR></TABLE><P>
+
+<font size="-1"><pre> 
+int <font color="red"><strong>ft_thread_select</strong></font>    (int len,ft_event_t *array,int *mask);
+int <font color="red"><strong>ft_thread_select_n</strong></font>  (int len,ft_event_t *array,int *mask,int timeout);
+</pre></font></p><br>
+
+<!-- Getting Generated Values -->
+<a name="container1094">
+<TABLE width='100%'>
+<TR><TD bgcolor='#ffe4c4'>
+<FONT face='sans-serif' size='+1'><B>
+<font color="#800020">
+Getting Generated Values</font>
+</B></FONT></TD></TR></TABLE><P>
+
+<font size="-1"><pre> 
+int <font color="red"><strong>ft_thread_get_value</strong></font>  (ft_event_t event,int num,void **result);
+</pre></font></p><br>
+
+<!-- Link and Unlink -->
+<a name="container1095">
+<TABLE width='100%'>
+<TR><TD bgcolor='#ffe4c4'>
+<FONT face='sans-serif' size='+1'><B>
+<font color="#800020">
+Link and Unlink</font>
+</B></FONT></TD></TR></TABLE><P>
+
+<font size="-1"><pre> 
+int <font color="red"><strong>ft_thread_link</strong></font>    (ft_scheduler_t scheduler);
+int <font color="red"><strong>ft_thread_unlink</strong></font>  (void);
+</pre></font></p><br>
+
+<!-- Current Thread and Scheduler -->
+<a name="container1096">
+<TABLE width='100%'>
+<TR><TD bgcolor='#ffe4c4'>
+<FONT face='sans-serif' size='+1'><B>
+<font color="#800020">
+Current Thread and Scheduler</font>
+</B></FONT></TD></TR></TABLE><P>
+
+<font size="-1"><pre> 
+ft_thread_t     <font color="red"><strong>ft_thread_self</strong></font>       (void);
+ft_scheduler_t  <font color="red"><strong>ft_thread_scheduler</strong></font>  (void);
+</pre></font></p><br>
+
+<!-- Exit -->
+<a name="container1097">
+<TABLE width='100%'>
+<TR><TD bgcolor='#ffe4c4'>
+<FONT face='sans-serif' size='+1'><B>
+<font color="#800020">
+Exit</font>
+</B></FONT></TD></TR></TABLE><P>
+
+<font size="-1"><pre>void <font color="red"><strong>ft_exit</strong></font>  (void);
+</pre></font></p><br>
+
+<!-- Locks -->
+<a name="container1098">
+<TABLE width='100%'>
+<TR><TD bgcolor='#ffe4c4'>
+<FONT face='sans-serif' size='+1'><B>
+<font color="#800020">
+Locks</font>
+</B></FONT></TD></TR></TABLE><P>
+
+<font size="-1"><pre> 
+int <font color="red"><strong>ft_thread_mutex_lock</strong></font>    (pthread_mutex_t *mutex);
+int <font color="red"><strong>ft_thread_mutex_unlock</strong></font>  (pthread_mutex_t *mutex);
+</pre></font></p><br>
+
+<!-- Pthreads -->
+<a name="container1099">
+<TABLE width='100%'>
+<TR><TD bgcolor='#ffe4c4'>
+<FONT face='sans-serif' size='+1'><B>
+<font color="#800020">
+Pthreads</font>
+</B></FONT></TD></TR></TABLE><P>
+
+<font size="-1"><pre> 
+pthread_t <font color="red"><strong>ft_pthread</strong></font>  (ft_thread_t thread);
+</pre></font></p><br>
+
+<!-- Macros for Automata -->
+<a name="container1100">
+<TABLE width='100%'>
+<TR><TD bgcolor='#ffe4c4'>
+<FONT face='sans-serif' size='+1'><B>
+<font color="#800020">
+Macros for Automata</font>
+</B></FONT></TD></TR></TABLE><P>
+
+<font size="-1"><pre> 
+<font color="red"><strong>AUTOMATON</strong></font>(name) 
+<font color="red"><strong>DEFINE_AUTOMATON</strong></font>(name) 
+<font color="red"><strong>BEGIN_AUTOMATON</strong></font>
+<font color="red"><strong>END_AUTOMATON</strong></font>  
+
+<font color="red"><strong>STATE</strong></font>(num)    
+<font color="red"><strong>STATE_AWAIT</strong></font>(num,event) 
+<font color="red"><strong>STATE_AWAIT_N</strong></font>(num,event,delay)
+<font color="red"><strong>STATE_GET_VALUE</strong></font>(num,event,n,result) 
+<font color="red"><strong>STATE_STAY</strong></font>(num,delay)               
+<font color="red"><strong>STATE_JOIN</strong></font>(num,thread)              
+<font color="red"><strong>STATE_JOIN_N</strong></font>(num,thread,delay)      
+<font color="red"><strong>STATE_SELECT</strong></font>(num,n,array,mask)              
+<font color="red"><strong>STATE_SELECT_N</strong></font>(num,n,array,mask,delay)
+
+<font color="red"><strong>GOTO</strong></font>(num) 
+<font color="red"><strong>GOTO_NEXT</strong></font> 
+<font color="red"><strong>IMMEDIATE</strong></font>(num)
+<font color="red"><strong>RETURN</strong></font>
+
+<font color="red"><strong>SELF</strong></font>   
+<font color="red"><strong>SET_LOCAL</strong></font>(data) 
+<font color="red"><strong>LOCAL</strong></font>   
+<font color="red"><strong>ARGS</strong></font>  
+<font color="red"><strong>RETURN_CODE</strong></font> 
+</pre></font></p><br>
+</td></tr></table>
+
+<hr width="100%">
+ <font size="-1">
+This page has been generated by <a href="http://www-sop.inria.fr/mimosa/fp/Scribe">Scribe</a>.
+<br>
+
+Last update <em>Tue Jun  4 10:09:20 2002</em></font>
+</html>

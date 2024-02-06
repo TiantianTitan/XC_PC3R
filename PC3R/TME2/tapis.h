@@ -8,8 +8,10 @@
 
 #ifndef TAPIS_H_
 #define TAPIS_H_
+#include <stdlib.h>
+#include <stdio.h>
 #include "paquet.h"
-#include <pthread.h>
+#include "./ft_v1.1"
 
 
 
@@ -18,21 +20,21 @@ typedef struct
 	paquet** tab;
 	size_t allocsize;
 	size_t index;
+	size_t begin;
 	size_t sz;
-	pthread_mutex_t mutex;
-	pthread_cond_t  cv_full;
-	pthread_cond_t  cv_empty ;
+	ft_event_t* cv;
+
+
 }tapis;
 
-void mktapis(size_t maxsize, tapis* t)
+void mktapis(size_t maxsize, tapis* t, ft_event_t* cv, char * str)
 {
+	t->tab = (paquet**)malloc( maxsize*sizeof( paquet ) );
 	t->allocsize= maxsize;
 	t->index=0;
 	t->sz=0;
-	t->tab = (paquet**)malloc( maxsize*sizeof( paquet ) );
-	pthread_mutex_init( &t->mutex, NULL );
-    pthread_cond_init( &t->cv_empty, NULL );
-	pthread_cond_init( &t->cv_full, NULL );
+	t->cv = cv;
+	t->begin = 0;
 }
 
 //Only used in push and pop, so dont need to use mutex
@@ -46,50 +48,29 @@ int full(tapis* t)
 	return ( t->sz == t->allocsize );
 }
 
-size_t size(tapis* t)
-{
-	pthread_mutex_lock( &t->mutex );
-	size_t res = t->sz;
-	pthread_mutex_unlock( &t->mutex );
-	return res;
-}
 
 paquet* popTapis(tapis* t, int* compt)
 {
-	pthread_mutex_lock(&t->mutex);
-	while(empty(t)) 
-	{
-		pthread_cond_wait(&t->cv_empty , &t->mutex);
-	}
-
-	if(full(t)) 
-	{
-		pthread_cond_signal(&t->cv_full);
-	}
-
-	paquet* p = t->tab[t->index];
-	t->sz--;
-	t->index=(t->index+1)%t->allocsize;
-	(*compt)--;
-	pthread_mutex_unlock(&t->mutex);
-	return p;
+	 while(empty(t) && compt > 0){
+        ft_thread_await(*t->cv);
+		ft_thread_cooperate();
+    }
+    struct paquet * p = t->tab[t->begin];
+    t->sz --;
+    t->begin = (t->begin + 1) % t->allocsize;
+    ft_scheduler_broadcast(*t->cv);
+    return p;
 }
 
 void pushTapis(tapis*t, paquet* p)
 {
-	pthread_mutex_lock(&t->mutex);
-	while(full(t)) 
-	{
-		pthread_cond_wait(&t->cv_full , &t->mutex);
-	}
-	if(empty(t)) 
-	{
-		pthread_cond_signal(&t->cv_empty);
-	}
-
-	t->tab[ ( t->index+t->sz ) %t->allocsize ]=p;
-	t->sz++;
-	pthread_mutex_unlock(&t->mutex);
+  while(full(t)){
+        ft_thread_await(*t->cv);
+        ft_thread_cooperate();
+    }
+    t->tab[ (t->begin + t->sz) % t->allocsize ] = p;
+    t->sz++;
+    ft_thread_generate(*t->cv);
 }
 
 

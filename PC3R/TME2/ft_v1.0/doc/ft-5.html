@@ -1,0 +1,421 @@
+<!-- Examples -->
+<a name="container1111">
+<html>
+<title>5. Examples</title>
+
+ <head>  <style type="text/css">
+pre { font-family: monospace }
+ tt { font-family: monospace }
+ code { font-family: monospace }
+ p.flushright {text-align: right }
+ p.flushleft {text-align: left }
+ span.sc { font-variant: small-caps }
+</style>
+ <body
+ bgcolor="white" text="black">
+ </head>
+
+<table width="100%">
+<tr><td bgcolor="#ffe4c4"><br>
+<font color="#800020">
+<center><font face='sans-serif' size='+10'><b>
+ 5. Examples
+</b></font></center>
+</font>
+<br>
+</td></tr></table>
+
+
+<table cellpadding="3" width="100%"><tr>
+<td valign="top" bgcolor="#ffe4c4" width="180">
+
+<!-- Browsing -->
+<a name="container1246">
+<TABLE width='100%'>
+<TR><TD bgcolor='#800020'>
+<FONT face='sans-serif' size='+1'><B>
+<font color="#f7e0c0">
+Browsing</font>
+</B></FONT></TD></TR></TABLE><P>
+
+<table width="100%">
+<tr><th align="left" valign="top" colspan="1" rowspan="1">Home: </th><td align="right" colspan="1" rowspan="1"><a href="ft.html"><strong>Fair Threads in C</strong></a></td></tr>
+<tr><td align="left" colspan="1" rowspan="1"><br>
+</td></tr>
+<tr><th align="left" valign="top" colspan="1" rowspan="1">Previous chapter: </th><td align="right" colspan="1" rowspan="1"><a href="ft-4.html#container1101">API</a></td></tr>
+<tr><th align="left" valign="top" colspan="1" rowspan="1">Next chapter: </th><td align="right" colspan="1" rowspan="1"><a href="ft-6.html#container1117">Related Work</a></td></tr>
+</table>
+</p><br>
+
+<!-- Examples -->
+<a name="container1248">
+<TABLE width='100%'>
+<TR><TD bgcolor='#800020'>
+<FONT face='sans-serif' size='+1'><B>
+<font color="#f7e0c0">
+Examples</font>
+</B></FONT></TD></TR></TABLE><P>
+
+<pre><font face="normal">5.1 <a href="ft-5.html#container1103">Hello World!</a>
+5.2 <a href="ft-5.html#container1104">Blocking I/O</a>
+5.3 <a href="ft-5.html#container1107">Producer/Consumer</a>
+5.4 <a href="ft-5.html#container1110">Automata</a>
+</font></pre></p><br>
+
+<!-- Chapters -->
+<a name="container1250">
+<TABLE width='100%'>
+<TR><TD bgcolor='#800020'>
+<FONT face='sans-serif' size='+1'><B>
+<font color="#f7e0c0">
+Chapters</font>
+</B></FONT></TD></TR></TABLE><P>
+
+<pre><font face="normal">1. <a href="ft-1.html#container1043">Introduction</a>
+2. <a href="ft-2.html#container1055">Rationale</a>
+3. <a href="ft-3.html#container1084">API Overview</a>
+4. <a href="ft-4.html#container1101">API</a>
+5. <a href="ft-5.html#container1111">Examples</a>
+6. <a href="ft-6.html#container1117">Related Work</a>
+7. <a href="ft-7.html#container1124">Conclusion</a>
+8. <a href="ft-8.html#container1222">Man Pages</a>
+</font></pre></p><br>
+</td>
+</td><td valign="top" width="100%">
+
+
+
+<!-- 5.1 Hello World! -->
+<a name="container1103">
+<TABLE width='100%'>
+<TR><TD bgcolor='#ffe4c4'>
+<FONT face='sans-serif' size='+1'><B>
+<font color="#800020">
+5.1 Hello World!</font>
+</B></FONT></TD></TR></TABLE><P>
+
+
+
+The following code is a complete example, made of two threads
+run in the same scheduler.
+
+<font size="-1"><pre><font color="#00cf00"><strong>#include</strong></font> <font color="red">&quot;fthread.h&quot;</font>
+<font color="#00cf00"><strong>#include</strong></font> &lt;stdio.h&gt;
+
+void h (void *id)
+{
+   <font color="blue"><strong>while</strong></font> (1) {
+      fprintf (stderr,&quot;Hello &quot;);
+      ft_thread_cooperate ();
+   }
+}
+
+void w (void *id)
+{
+   <font color="blue"><strong>while</strong></font> (1) {
+      fprintf (stderr,&quot;World!\n&quot;);
+      ft_thread_cooperate ();
+   }
+}
+
+int main (void)
+{
+  ft_scheduler_t sched = ft_scheduler_create ();
+
+  ft_thread_create (sched,h,NULL,NULL);
+  ft_thread_create (sched,w,NULL,NULL);
+
+  ft_scheduler_start (sched);
+
+  ft_exit ();
+  <font color="blue"><strong>return</strong></font> 0;
+}
+</pre></font>
+
+The program outputs <font size="-1"><tt>Hello World!</tt></font> cyclically. Note the call
+of <font size="-1"><tt>ft_exit</tt></font> to prevent the program to terminate before
+executing the two threads. Execution of linked fair threads is
+round-robin and deterministic: messages <font size="-1"><tt>Hello</tt></font> and <font size="-1"><tt>World!</tt></font> are always printed in this order.
+
+
+<p>
+ Here is the typical way to produce executable code:
+
+<font size="-1"><pre>gcc -D_REENTRANT -o test test.c -lfthread -lpthread 
+</pre></font>
+</p>
+
+
+</p><br>
+
+
+
+
+
+<!-- 5.2 Blocking I/O -->
+<a name="container1104">
+<TABLE width='100%'>
+<TR><TD bgcolor='#ffe4c4'>
+<FONT face='sans-serif' size='+1'><B>
+<font color="#800020">
+5.2 Blocking I/O</font>
+</B></FONT></TD></TR></TABLE><P>
+
+
+
+The following function <font size="-1"><tt>ft_thread_read</tt></font> implements a non-blocking read
+I/O, using the standard blocking <font size="-1"><tt>read</tt></font> function. The calling
+thread first unlinks from the scheduler, then performs the read, and
+finally re-links to the scheduler:
+
+<font size="-1"><pre>ssize_t ft_thread_read (int fd,void *buf,size_t count)
+{ 
+   ft_scheduler_t sched = ft_thread_scheduler ();
+   ssize_t res;
+   
+   <font color="red"><strong>ft_thread_unlink</strong></font> ();
+   
+   res = read (fd,buf,count);
+   
+   <font color="red"><strong>ft_thread_link</strong></font> (sched);
+   <font color="blue"><strong>return</strong></font> res;
+}
+</pre></font>
+
+</p><br>
+
+
+
+<!-- 5.3 Producer/Consumer -->
+<a name="container1107">
+<TABLE width='100%'>
+<TR><TD bgcolor='#ffe4c4'>
+<FONT face='sans-serif' size='+1'><B>
+<font color="#800020">
+5.3 Producer/Consumer</font>
+</B></FONT></TD></TR></TABLE><P>
+
+
+
+One implements a producer/consumer example. There are 2 files, <font size="-1"><tt>in</tt></font> and <font size="-1"><tt>out</tt></font>, and
+a pool of threads that take data from  <font size="-1"><tt>in</tt></font>, process them, and then put results in
+<font size="-1"><tt>out</tt></font>. A scheduler and an event are associated to each file; the event is generated
+to indicate that a new value is produded in the associated file.
+
+<font size="-1"><pre>file in = NULL, out = NULL;
+ft_scheduler_t in_sched, out_sched;
+ft_event_t new_input, new_output;
+</pre></font>
+
+
+<!-- Processing Values -->
+<a name="container1105">
+<h3><font color="#800020">
+Processing Values</font>
+</h3><p>
+
+
+In order to process a value <font size="-1"><tt>v</tt></font>, the calling thread first
+unlinks from <font size="-1"><tt>in_sched</tt></font>. After processing, it links to <font size="-1"><tt>out_sched</tt></font> in order to put the result in <font size="-1"><tt>out</tt></font>, and finally, it
+re-links to <font size="-1"><tt>in_sched</tt></font>.  The procedure for processing a value is
+the following (for simplicity, values are of type <font size="-1"><tt>int</tt></font>):
+
+<font size="-1"><pre>void process_value (int v)
+{
+  ft_thread_unlink ();
+  <em>&lt; process v &gt;</em>
+  ft_thread_link (out_sched);
+  put (v,&amp;out);
+  ft_thread_generate (new_output);
+  ft_thread_unlink ();
+  ft_thread_link (in_sched);
+}
+</pre></font>
+
+The function run by the processing threads is:
+
+<font size="-1"><pre>void process (void *args)
+{
+  <font color="blue"><strong>while</strong></font> (1) {
+    <font color="blue"><strong>if</strong></font> (size(in) &gt; 0) {
+      process_value (get (&amp;in));
+    } <font color="blue"><strong>else</strong></font> {
+      ft_thread_await (new_input);
+      <font color="blue"><strong>if</strong></font> (size (in) == 0) <font color="red"><strong>ft_thread_cooperate ()</strong></font>
+    }
+  }
+}
+</pre></font>
+
+The event <code>new_input</code> is used to prevent polling when no value
+is available from <font size="-1"><tt>in</tt></font>. However, to test it as present does not
+necessary implies that a value is available: it could have been consumed
+by another thread. Thus, a call to <font size="-1"><tt>ft_thread_cooperate</tt></font> is needed to avoid an infinite loop
+during the same instant, if <code>new_input</code> is tested as present
+while no value is actually available.
+
+</p><br>
+
+
+
+
+<!-- Main Function -->
+<a name="container1106">
+<h3><font color="#800020">
+Main Function</font>
+</h3><p>
+
+
+Two threads are added to the system: one for producing
+new values, and the other for consuming results.  The main
+function is the following:
+
+<font size="-1"><pre>int main (void)
+{
+   int i;
+   ft_thread_t thread_array [MAX_THREADS]
+
+   in_sched  = ft_scheduler_create ();
+   out_sched = ft_scheduler_create ();
+   
+   new_input  = ft_event_create (in_sched);
+   new_output = ft_event_create (out_sched);     
+
+   <font color="blue"><strong>for</strong></font> (i=0; i&lt;MAX_THREADS; i++) {
+      thread_array[i] = ft_thread_create (in_sched,process,NULL,NULL);
+   }
+  
+   ft_thread_create (in_sched,produce,NULL,NULL);
+   ft_thread_create (out_sched,consume,NULL,NULL);
+
+   ft_scheduler_start (in_sched);
+   ft_scheduler_start (out_sched);  
+
+   ft_exit ();
+   <font color="blue"><strong>return</strong></font> 0;
+}
+</pre></font>
+
+</p><br>
+
+
+</p><br>
+
+
+
+<!-- 5.4 Automata -->
+<a name="container1110">
+<TABLE width='100%'>
+<TR><TD bgcolor='#ffe4c4'>
+<FONT face='sans-serif' size='+1'><B>
+<font color="#800020">
+5.4 Automata</font>
+</B></FONT></TD></TR></TABLE><P>
+
+
+
+
+<!-- Preemption by an Event -->
+<a name="container1108">
+<h3><font color="#800020">
+Preemption by an Event</font>
+</h3><p>
+
+Here is the example of a one-state automaton, named <code>killer</code>,
+that preempts a thread when an event is present. The thread and the event are accessible
+with the macro <code>ARGS</code>.
+
+<font size="-1"><pre>DEFINE_AUTOMATON (killer)
+{
+   void **args = ARGS;
+   ft_event_t event   = args[0]
+   ft_thread_t thread = args[1]
+   
+   BEGIN_AUTOMATON
+     
+     STATE_AWAIT (0,event)
+     {
+        ft_scheduler_stop (thread);
+     }
+  
+   END_AUTOMATON
+}
+</pre></font>
+
+A fair thread is created by:
+
+<font size="-1"><pre>ft_thread_t a = ft_automaton_create (sched,killer,NULL,args);
+</pre></font>
+
+The difference with a standard thread created by <code>ft_thread_create</code> is that no new pthread is
+actually created by <code>ft_automaton_create</code>. The automaton is simply run by the scheduler's pthread.
+Thus, no pthread context switch is needed and execution is more efficient.
+</p><br>
+
+
+
+
+<!-- Two Threads Run in Turn -->
+<a name="container1109">
+<h3><font color="#800020">
+Two Threads Run in Turn</font>
+</h3><p>
+
+
+
+The following automaton switches control between two threads, according to the presence of an event.
+The automaton <code>switch_aut</code> has three states. The first state resumes the first thread to run 
+(initially, both threads are suspended).
+The switching event is awaited in the second state, and then the threads are switched. The third state
+is similar to the second, except that the threads are exchanged.
+
+<font size="-1"><pre>DEFINE_AUTOMATON (switch_aut)
+{
+   void **args = ARGS;
+   
+   ft_event_t   event   = args[0]
+   ft_thread_t  thread1 = args[1]
+   ft_thread_t  thread2 = args[2]
+   
+  BEGIN_AUTOMATON
+     
+     STATE (0)
+     {
+        ft_scheduler_resume (thread1);
+     }
+     STATE_AWAIT (1,event)
+     {
+        ft_scheduler_suspend (thread1);
+        ft_scheduler_resume  (thread2);
+        GOTO(2);
+     }
+     STATE_AWAIT (2,event)
+     {
+        ft_scheduler_suspend (thread2);
+        ft_scheduler_resume  (thread1);
+        GOTO(1);
+     }
+     
+  END_AUTOMATON
+}
+</pre></font>
+
+If a standard thread were used instead of an automaton, one supplementary pthread
+would be needed to perform the same task.
+
+</p><br>
+
+
+
+</p><br>
+
+
+</td></tr></table>
+
+<hr width="100%">
+ <font size="-1">
+This page has been generated by <a href="http://www-sop.inria.fr/mimosa/fp/Scribe">Scribe</a>.
+<br>
+
+Last update <em>Tue Jun  4 10:09:20 2002</em></font>
+</html>

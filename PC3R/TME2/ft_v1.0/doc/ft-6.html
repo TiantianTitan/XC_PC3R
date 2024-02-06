@@ -1,0 +1,221 @@
+<!-- Related Work -->
+<a name="container1117">
+<html>
+<title>6. Related Work</title>
+
+ <head>  <style type="text/css">
+pre { font-family: monospace }
+ tt { font-family: monospace }
+ code { font-family: monospace }
+ p.flushright {text-align: right }
+ p.flushleft {text-align: left }
+ span.sc { font-variant: small-caps }
+</style>
+ <body
+ bgcolor="white" text="black">
+ </head>
+
+<table width="100%">
+<tr><td bgcolor="#ffe4c4"><br>
+<font color="#800020">
+<center><font face='sans-serif' size='+10'><b>
+ 6. Related Work
+</b></font></center>
+</font>
+<br>
+</td></tr></table>
+
+
+<table cellpadding="3" width="100%"><tr>
+<td valign="top" bgcolor="#ffe4c4" width="180">
+
+<!-- Browsing -->
+<a name="container1251">
+<TABLE width='100%'>
+<TR><TD bgcolor='#800020'>
+<FONT face='sans-serif' size='+1'><B>
+<font color="#f7e0c0">
+Browsing</font>
+</B></FONT></TD></TR></TABLE><P>
+
+<table width="100%">
+<tr><th align="left" valign="top" colspan="1" rowspan="1">Home: </th><td align="right" colspan="1" rowspan="1"><a href="ft.html"><strong>Fair Threads in C</strong></a></td></tr>
+<tr><td align="left" colspan="1" rowspan="1"><br>
+</td></tr>
+<tr><th align="left" valign="top" colspan="1" rowspan="1">Previous chapter: </th><td align="right" colspan="1" rowspan="1"><a href="ft-5.html#container1111">Examples</a></td></tr>
+<tr><th align="left" valign="top" colspan="1" rowspan="1">Next chapter: </th><td align="right" colspan="1" rowspan="1"><a href="ft-7.html#container1124">Conclusion</a></td></tr>
+</table>
+</p><br>
+
+<!-- Related Work -->
+<a name="container1253">
+<TABLE width='100%'>
+<TR><TD bgcolor='#800020'>
+<FONT face='sans-serif' size='+1'><B>
+<font color="#f7e0c0">
+Related Work</font>
+</B></FONT></TD></TR></TABLE><P>
+
+<pre><font face="normal"><a href="ft-6.html#container1112">Thread Libraries in C</a>
+<a href="ft-6.html#container1113">Java Threads</a>
+<a href="ft-6.html#container1114">Threads in Functional Languages</a>
+<a href="ft-6.html#container1115">Reactive Approach</a>
+<a href="ft-6.html#container1116">Chores and Filaments</a>
+</font></pre></p><br>
+
+<!-- Chapters -->
+<a name="container1255">
+<TABLE width='100%'>
+<TR><TD bgcolor='#800020'>
+<FONT face='sans-serif' size='+1'><B>
+<font color="#f7e0c0">
+Chapters</font>
+</B></FONT></TD></TR></TABLE><P>
+
+<pre><font face="normal">1. <a href="ft-1.html#container1043">Introduction</a>
+2. <a href="ft-2.html#container1055">Rationale</a>
+3. <a href="ft-3.html#container1084">API Overview</a>
+4. <a href="ft-4.html#container1101">API</a>
+5. <a href="ft-5.html#container1111">Examples</a>
+6. <a href="ft-6.html#container1117">Related Work</a>
+7. <a href="ft-7.html#container1124">Conclusion</a>
+8. <a href="ft-8.html#container1222">Man Pages</a>
+</font></pre></p><br>
+</td>
+</td><td valign="top" width="100%">
+
+
+
+<!-- Thread Libraries in C -->
+<a name="container1112">
+<TABLE width='100%'>
+<TR><TD bgcolor='#ffe4c4'>
+<FONT face='sans-serif' size='+1'><B>
+<font color="#800020">
+Thread Libraries in C</font>
+</B></FONT></TD></TR></TABLE><P>
+
+
+
+Several thread libraries exist for C. Among them, the <strong>Pthreads</strong>
+library  [<a href="ft.html#PTHREADS">17</a>] implements the POSIX standard for
+preemptive threads. LinuxThreads  [<a href="ft.html#LinuxThreads">4</a>] is an
+implementation of <strong>Pthreads</strong> for Linux; it is based on kernel-level threads.
+Quick Threads [<a href="ft.html#QUICKTHREADS">14</a>] provides programmers with
+a minimal support for multithreading at user-space level.  Basically,
+it implements context-switching in assembly code, and is thus a
+low-level solution to multithreading.
+
+Gnu Portable Threads [<a href="ft.html#GPT">11</a>] (GNU Pth) is a library of purely
+cooperative threads which has portability as main objective.  The Next
+Generation POSIX Threading project [<a href="ft.html#NGPT">5</a>] proposes to extend
+GNU Pth to the M:N model, with Linux SMP machines as target.
+
+</p><br>
+
+
+
+<!-- Java Threads -->
+<a name="container1113">
+<TABLE width='100%'>
+<TR><TD bgcolor='#ffe4c4'>
+<FONT face='sans-serif' size='+1'><B>
+<font color="#800020">
+Java Threads</font>
+</B></FONT></TD></TR></TABLE><P>
+
+ 
+
+Java introduce threads at language level. Actually, threads are
+generally heavily used in Java, for example when graphics or
+networking is involved. No assumption is made on the way threads are
+scheduled (cooperative or preemptive scheduling) wich makes Java
+multithreaded systems difficult to program and to port [<a href="ft.html#HOLLUB">13</a>].  This difficulty is pointed out by the suppression from the
+recent versions of the language of the threads primitives to gain fine
+control over threads [<a href="ft.html#JAVASOFT">3</a>]. A first version of
+<strong>FairThreads</strong> has been proposed in the context of the Java language [<a href="ft.html#FairThreads">7</a>] in order to simplify concurrent programming in Java.
+
+</p><br>
+
+
+
+
+<!-- Threads in Functional Languages -->
+<a name="container1114">
+<TABLE width='100%'>
+<TR><TD bgcolor='#ffe4c4'>
+<FONT face='sans-serif' size='+1'><B>
+<font color="#800020">
+Threads in Functional Languages</font>
+</B></FONT></TD></TR></TABLE><P>
+
+
+
+ Threads are used in several ML-based languages such as CML [<a href="ft.html#CML">18</a>].  CML is preemptively scheduled and threads communication is
+ synchronous and based on channels.  Threads are also introduced in
+ CAML [<a href="ft.html#CAML">2</a>]; they are implemented by time-sharing
+ on a single processor, and thus cannot benefit from multiprocessors
+ machines.
+
+<strong>FairThreads</strong> has been recently introduced in the Bigloo  [<a href="ft.html#Bigloo">1</a>]
+implementation of Scheme.  The present version only supports linked
+threads, and special constructs are introduced to deal with
+non-blocking I/Os. </p><br>
+
+
+
+<!-- Reactive Approach -->
+<a name="container1115">
+<TABLE width='100%'>
+<TR><TD bgcolor='#ffe4c4'>
+<FONT face='sans-serif' size='+1'><B>
+<font color="#800020">
+Reactive Approach</font>
+</B></FONT></TD></TR></TABLE><P>
+
+
+<strong>FairThreads</strong> actually comes out from the so-called <em>reactive approach</em> [<a href="ft.html#RP">6</a>].  In this approach, one basically has instants and
+broadcast events. As opposite to <em>synchronous languages</em> [<a href="ft.html#HALBWACHS">12</a>] such as Esterel, the absence of an event during one
+instant cannot be decided before the end of this very instant. As a
+consequence, the reaction to the absence of one event is delayed to
+the next instant. This is a way to solve so-called &quot;causality
+problems&quot; which are raised with synchronous languages, and which are
+obstacles to modularity. The Reactive-C [<a href="ft.html#Reactive-C">8</a>]
+language was the first proposal for reactive programming in C;
+in this respect, <strong>FairThreads</strong> can be considered as a descendant of it. 
+</p><br>
+
+
+
+<!-- Chores and Filaments -->
+<a name="container1116">
+<TABLE width='100%'>
+<TR><TD bgcolor='#ffe4c4'>
+<FONT face='sans-serif' size='+1'><B>
+<font color="#800020">
+Chores and Filaments</font>
+</B></FONT></TD></TR></TABLE><P>
+
+
+Chores [<a href="ft.html#Presto">10</a>] and <em>filaments</em> [<a href="ft.html#Filaments">15</a>] are small pieces of code that do not have private stack
+and are never preempted. Chores and filaments are designed for
+fine-grain parallelism programming on shared-memory machines.  Chores
+and filaments are completely executed and cannot be suspended nor
+resumed. Generally, a pool of threads is devoted to execute them.
+Chores and chunk-based techniques are described in details in the
+context of the Java language in  [<a href="ft.html#CHORES">9</a>] and  [<a href="ft.html#HOLLUB">13</a>].  Automata in <strong>FairThreads</strong> are close to chores and filaments,
+but give programmers more freedom for direct coding of states-based
+algorithms.  Automata are also related to <em>mode automata</em> [<a href="ft.html#ModeAutomata">16</a>] in which states capture the notion of a running
+mode in the context of the synchronous language Lustre.
+</p><br>
+
+
+</td></tr></table>
+
+<hr width="100%">
+ <font size="-1">
+This page has been generated by <a href="http://www-sop.inria.fr/mimosa/fp/Scribe">Scribe</a>.
+<br>
+
+Last update <em>Tue Jun  4 10:09:20 2002</em></font>
+</html>

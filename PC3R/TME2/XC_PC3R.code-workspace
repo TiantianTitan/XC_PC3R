@@ -1,0 +1,18 @@
+{
+	"folders": [
+		{
+			"path": "../.."
+		},
+		{
+			"path": "../../../../ft_v1.0"
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"iostream": "cpp",
+			"*.1": "c",
+			"paquet.h": "c",
+			"tapis.h": "c"
+		}
+	}
+}

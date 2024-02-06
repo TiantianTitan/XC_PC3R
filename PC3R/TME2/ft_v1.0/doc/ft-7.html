@@ -1,0 +1,187 @@
+<!-- Conclusion -->
+<a name="container1124">
+<html>
+<title>7. Conclusion</title>
+
+ <head>  <style type="text/css">
+pre { font-family: monospace }
+ tt { font-family: monospace }
+ code { font-family: monospace }
+ p.flushright {text-align: right }
+ p.flushleft {text-align: left }
+ span.sc { font-variant: small-caps }
+</style>
+ <body
+ bgcolor="white" text="black">
+ </head>
+
+<table width="100%">
+<tr><td bgcolor="#ffe4c4"><br>
+<font color="#800020">
+<center><font face='sans-serif' size='+10'><b>
+ 7. Conclusion
+</b></font></center>
+</font>
+<br>
+</td></tr></table>
+
+
+<table cellpadding="3" width="100%"><tr>
+<td valign="top" bgcolor="#ffe4c4" width="180">
+
+<!-- Browsing -->
+<a name="container1256">
+<TABLE width='100%'>
+<TR><TD bgcolor='#800020'>
+<FONT face='sans-serif' size='+1'><B>
+<font color="#f7e0c0">
+Browsing</font>
+</B></FONT></TD></TR></TABLE><P>
+
+<table width="100%">
+<tr><th align="left" valign="top" colspan="1" rowspan="1">Home: </th><td align="right" colspan="1" rowspan="1"><a href="ft.html"><strong>Fair Threads in C</strong></a></td></tr>
+<tr><td align="left" colspan="1" rowspan="1"><br>
+</td></tr>
+<tr><th align="left" valign="top" colspan="1" rowspan="1">Previous chapter: </th><td align="right" colspan="1" rowspan="1"><a href="ft-6.html#container1117">Related Work</a></td></tr>
+<tr><th align="left" valign="top" colspan="1" rowspan="1">Next chapter: </th><td align="right" colspan="1" rowspan="1"><a href="ft-8.html#container1222">Man Pages</a></td></tr>
+</table>
+</p><br>
+
+<!-- Conclusion -->
+<a name="container1258">
+<TABLE width='100%'>
+<TR><TD bgcolor='#800020'>
+<FONT face='sans-serif' size='+1'><B>
+<font color="#f7e0c0">
+Conclusion</font>
+</B></FONT></TD></TR></TABLE><P>
+
+<pre><font face="normal"></font></pre></p><br>
+
+<!-- Chapters -->
+<a name="container1260">
+<TABLE width='100%'>
+<TR><TD bgcolor='#800020'>
+<FONT face='sans-serif' size='+1'><B>
+<font color="#f7e0c0">
+Chapters</font>
+</B></FONT></TD></TR></TABLE><P>
+
+<pre><font face="normal">1. <a href="ft-1.html#container1043">Introduction</a>
+2. <a href="ft-2.html#container1055">Rationale</a>
+3. <a href="ft-3.html#container1084">API Overview</a>
+4. <a href="ft-4.html#container1101">API</a>
+5. <a href="ft-5.html#container1111">Examples</a>
+6. <a href="ft-6.html#container1117">Related Work</a>
+7. <a href="ft-7.html#container1124">Conclusion</a>
+8. <a href="ft-8.html#container1222">Man Pages</a>
+</font></pre></p><br>
+</td>
+</td><td valign="top" width="100%">
+
+
+
+<!-- Multiprocessing -->
+<a name="container1118">
+<h3><font color="#800020">
+Multiprocessing</font>
+</h3><p>
+ 
+
+In <strong>FairThreads</strong>, users have control on the way threads are scheduled. Fair threads which are
+linked to a scheduler are scheduled in a cooperative way by it.
+
+When a fair thread unlinks from a scheduler, it becomes an autonomous
+native thread which can be run in real parallelism, on a distinct
+processor.
+
+An important point is that <strong>FairThreads</strong> provides users with <strong>programming primitives</strong> allowing threads to dynamically link to
+schedulers and to dynamically unlink from them.  
+</p><br>
+
+
+
+<!-- Precise Semantics -->
+<a name="container1119">
+<h3><font color="#800020">
+Precise Semantics</font>
+</h3><p>
+ 
+
+Linked threads have a precise and clear semantics (which can be
+formally given). The point is that systems exclusively made of threads
+linked to one unique scheduler are completely <strong>deterministic</strong>.
+</p><br>
+
+
+
+<!-- Simplicity -->
+<a name="container1120">
+<h3><font color="#800020">
+Simplicity</font>
+</h3><p>
+
+<strong>FairThreads</strong> offers a very simple framework for concurrent and parallel
+programming. Simple cooperative systems can be coded in a simple way,
+without the need of locks to protect data. Instants give automatic
+synchronizations that can also simplify programming in certain
+situations.
+</p><br>
+
+
+
+<!-- Compatibility with Pthreads -->
+<a name="container1121">
+<h3><font color="#800020">
+Compatibility with Pthreads</font>
+</h3><p>
+ 
+<strong>FairThreads</strong> is fully compatible with the standard <strong>Pthreads</strong> library. Indeed,
+unlinked fair threads are actually just pthreads. In this respect,
+<strong>FairThreads</strong> is an extension of <strong>Pthreads</strong>, which allows users to define
+cooperative contexts with a clear and simple semantics, in which
+threads execute at the same pace and events are instantaneously
+broadcast.
+</p><br>
+
+
+
+<!-- Automata -->
+<a name="container1122">
+<h3><font color="#800020">
+Automata</font>
+</h3><p>
+ 
+
+Auxiliary tasks can be implemented using automata instead of standard
+fair threads.  Implementation of an automaton is lightweight and does
+not require a dedicated native thread.  Automata are useful for
+short-lived small tasks or when a large number of
+tasks is needed.  Automata are an alternative to standard techniques
+such as &quot;chunks&quot; or &quot;chores&quot;, sometimes used in thread-based
+programming.  </p><br>
+
+
+
+<!-- Implementation -->
+<a name="container1123">
+<h3><font color="#800020">
+Implementation</font>
+</h3><p>
+ 
+A first implementation of <strong>FairThreads</strong> is available (under the
+<a href="http://www.gnu.org">GNU General Public License</a> 
+as a library called <code>fthread</code> [<a href="ft.html#RP">6</a>]
+which must be used with the standard <strong>Pthreads</strong> library. 
+</p><br>
+
+
+</td></tr></table>
+
+<hr width="100%">
+ <font size="-1">
+This page has been generated by <a href="http://www-sop.inria.fr/mimosa/fp/Scribe">Scribe</a>.
+<br>
+
+Last update <em>Tue Jun  4 10:09:20 2002</em></font>
+</html>

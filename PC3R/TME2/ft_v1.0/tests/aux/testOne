@@ -1,0 +1,17 @@
+INCL_DIR=../include
+LIB_DIR=../lib
+LIBS="-lfthread -lpthread"
+#LIBS="-lposix4 -lfthread -lpthread"
+
+
+###############################################################
+echo "test of $1";
+rm -f aux/EXPECTED aux/RESULT
+
+gcc -Wall -O3 -D_REENTRANT -I $INCL_DIR -L $LIB_DIR $1.c $LIBS
+a.out > aux/RESULT
+
+aux/extractresult.sh $1.c > aux/EXPECTED
+
+diff -w aux/EXPECTED aux/RESULT
+

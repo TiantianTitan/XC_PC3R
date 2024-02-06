@@ -1,0 +1,570 @@
+<!-- API Overview -->
+<a name="container1084">
+<html>
+<title>3. API Overview</title>
+
+ <head>  <style type="text/css">
+pre { font-family: monospace }
+ tt { font-family: monospace }
+ code { font-family: monospace }
+ p.flushright {text-align: right }
+ p.flushleft {text-align: left }
+ span.sc { font-variant: small-caps }
+</style>
+ <body
+ bgcolor="white" text="black">
+ </head>
+
+<table width="100%">
+<tr><td bgcolor="#ffe4c4"><br>
+<font color="#800020">
+<center><font face='sans-serif' size='+10'><b>
+ 3. API Overview
+</b></font></center>
+</font>
+<br>
+</td></tr></table>
+
+
+<table cellpadding="3" width="100%"><tr>
+<td valign="top" bgcolor="#ffe4c4" width="180">
+
+<!-- Browsing -->
+<a name="container1236">
+<TABLE width='100%'>
+<TR><TD bgcolor='#800020'>
+<FONT face='sans-serif' size='+1'><B>
+<font color="#f7e0c0">
+Browsing</font>
+</B></FONT></TD></TR></TABLE><P>
+
+<table width="100%">
+<tr><th align="left" valign="top" colspan="1" rowspan="1">Home: </th><td align="right" colspan="1" rowspan="1"><a href="ft.html"><strong>Fair Threads in C</strong></a></td></tr>
+<tr><td align="left" colspan="1" rowspan="1"><br>
+</td></tr>
+<tr><th align="left" valign="top" colspan="1" rowspan="1">Previous chapter: </th><td align="right" colspan="1" rowspan="1"><a href="ft-2.html#container1055">Rationale</a></td></tr>
+<tr><th align="left" valign="top" colspan="1" rowspan="1">Next chapter: </th><td align="right" colspan="1" rowspan="1"><a href="ft-4.html#container1101">API</a></td></tr>
+</table>
+</p><br>
+
+<!-- API Overview -->
+<a name="container1238">
+<TABLE width='100%'>
+<TR><TD bgcolor='#800020'>
+<FONT face='sans-serif' size='+1'><B>
+<font color="#f7e0c0">
+API Overview</font>
+</B></FONT></TD></TR></TABLE><P>
+
+<pre><font face="normal">3.1 <a href="ft-3.html#container1061">Creation</a>
+3.2 <a href="ft-3.html#container1065">Orders</a>
+3.3 <a href="ft-3.html#container1068">Basic Primitives</a>
+3.4 <a href="ft-3.html#container1073">Managing Events</a>
+3.5 <a href="ft-3.html#container1077">Linking</a>
+3.6 <a href="ft-3.html#container1078">Automata</a>
+3.7 <a href="ft-3.html#container1083">Miscelaneous</a>
+</font></pre></p><br>
+
+<!-- Chapters -->
+<a name="container1240">
+<TABLE width='100%'>
+<TR><TD bgcolor='#800020'>
+<FONT face='sans-serif' size='+1'><B>
+<font color="#f7e0c0">
+Chapters</font>
+</B></FONT></TD></TR></TABLE><P>
+
+<pre><font face="normal">1. <a href="ft-1.html#container1043">Introduction</a>
+2. <a href="ft-2.html#container1055">Rationale</a>
+3. <a href="ft-3.html#container1084">API Overview</a>
+4. <a href="ft-4.html#container1101">API</a>
+5. <a href="ft-5.html#container1111">Examples</a>
+6. <a href="ft-6.html#container1117">Related Work</a>
+7. <a href="ft-7.html#container1124">Conclusion</a>
+8. <a href="ft-8.html#container1222">Man Pages</a>
+</font></pre></p><br>
+</td>
+</td><td valign="top" width="100%">
+
+
+
+<!-- 3.1 Creation -->
+<a name="container1061">
+<TABLE width='100%'>
+<TR><TD bgcolor='#ffe4c4'>
+<FONT face='sans-serif' size='+1'><B>
+<font color="#800020">
+3.1 Creation</font>
+</B></FONT></TD></TR></TABLE><P>
+
+
+
+<!-- Schedulers -->
+<a name="container1057">
+<h3><font color="#800020">
+Schedulers</font>
+</h3><p>
+
+
+<strong>FairThreads</strong> explicitely introduces schedulers, of type <code>ft_scheduler_t</code>. Before being used, a scheduler must be created
+by calling the function <code>ft_scheduler_create</code>.
+
+
+<p>
+ In order to be executed, a scheduler must be started by a call to the
+function <code>ft_scheduler_start</code>. Note that several schedulers
+can be used without problem simultaneously in the same program. </p>
+
+
+</p><br>
+
+
+
+<!-- Threads -->
+<a name="container1058">
+<h3><font color="#800020">
+Threads</font>
+</h3><p>
+
+
+Fair threads are of type <code>ft_thread_t</code>. The call <code>ft_thread_create(s,r,c,a)</code> creates a thread in the
+scheduler <code>s</code>. The thread is automatically started as soon as
+it is created.  The function <code>r</code> is executed by the
+thread, and the parameter <code>a</code> is transmitted to it.
+
+The function <code>c</code> is executed by the thread if it is stopped
+(by <code>ft_scheduler_stop</code>). The parameter <code>a</code> is also
+transmitted to it, if this happens.
+
+</p><br>
+
+
+
+<!-- Events -->
+<a name="container1059">
+<h3><font color="#800020">
+Events</font>
+</h3><p>
+
+
+Events are of the type <code>ft_event_t</code>. An event is created by
+calling the function <code>ft_event_create</code> which takes as
+parameter the scheduler in charge of it.
+
+</p><br>
+
+
+
+<!-- Automata -->
+<a name="container1060">
+<h3><font color="#800020">
+Automata</font>
+</h3><p>
+
+
+Automata are fair threads of the type <code>ft_thread_t</code> created
+with the function <code>ft_automaton_create</code>. The thread returned by
+<code>ft_automaton_create(s,r,c,a)</code> is executed as an automaton by
+the scheduler <code>s</code>.  The function <code>r</code> executed by the
+automaton must be defined with the macro <code>DEFINE_AUTOMATON</code>.
+
+</p><br>
+
+
+</p><br>
+
+
+
+
+<!-- 3.2 Orders -->
+<a name="container1065">
+<TABLE width='100%'>
+<TR><TD bgcolor='#ffe4c4'>
+<FONT face='sans-serif' size='+1'><B>
+<font color="#800020">
+3.2 Orders</font>
+</B></FONT></TD></TR></TABLE><P>
+
+
+
+<!-- Control of Threads -->
+<a name="container1063">
+<h3><font color="#800020">
+Control of Threads</font>
+</h3><p>
+
+
+The call <code>ft_scheduler_stop(t)</code> gives to the scheduler which
+executes the thread <code>t</code> the order to stop it.  The stop will
+become actual at the begining of the next instant of the scheduler, in
+order to assure that <code>t</code> is in a stable state when stopped.
+
+
+<p>
+
+
+The call <code>ft_scheduler_suspend(t)</code> gives to the scheduler
+which executes <code>t</code> the order to suspend <code>t</code>.  The
+suspension will become actual at the begining of the next instant of
+the scheduler.  The function <code>ft_scheduler_resume</code> is used to
+resume execution of suspended threads.
+
+</p>
+
+</p><br>
+
+
+
+<!-- Broadcast of Events -->
+<a name="container1064">
+<h3><font color="#800020">
+Broadcast of Events</font>
+</h3><p>
+
+
+The function <code>ft_scheduler_broadcast(e)</code> gives to the
+scheduler of the event <code>e</code> the order to broadcast it to all
+threads running in the scheduler. The event will be actually generated
+at the begining of the next instant of the scheduler. The call <code>ft_scheduler_broadcast_value(e,v)</code> associates the value <code>v</code>
+to <code>e</code> (<code>v</code> can be read using <code>ft_thread_get_value</code>).
+
+</p><br>
+
+
+</p><br>
+
+
+
+
+<!-- 3.3 Basic Primitives -->
+<a name="container1068">
+<TABLE width='100%'>
+<TR><TD bgcolor='#ffe4c4'>
+<FONT face='sans-serif' size='+1'><B>
+<font color="#800020">
+3.3 Basic Primitives</font>
+</B></FONT></TD></TR></TABLE><P>
+
+
+
+<!-- Cooperation -->
+<a name="container1066">
+<h3><font color="#800020">
+Cooperation</font>
+</h3><p>
+
+
+The call <code>ft_thread_cooperate()</code> is the explicit way for the
+calling thread to return control to the scheduler running it. The
+call <code>ft_thread_cooperate_n(i)</code> is equivalent to a sequence of
+<code>i</code> calls <code>ft_thread_cooperate()</code>.
+
+</p><br>
+
+
+
+<!-- Termination -->
+<a name="container1067">
+<h3><font color="#800020">
+Termination</font>
+</h3><p>
+
+
+The call <code>ft_thread_join(t)</code> suspends the execution of the
+calling thread until the thread <code>t</code> terminates (either
+normally or because it is stopped). Note that <code>t</code> needs not to be
+linked or running in the scheduler of the calling thread. With <code>ft_thread_join_n(t,i)</code> the suspension takes at most <code>i</code>
+instants.
+
+</p><br>
+
+
+</p><br>
+
+
+
+
+<!-- 3.4 Managing Events -->
+<a name="container1073">
+<TABLE width='100%'>
+<TR><TD bgcolor='#ffe4c4'>
+<FONT face='sans-serif' size='+1'><B>
+<font color="#800020">
+3.4 Managing Events</font>
+</B></FONT></TD></TR></TABLE><P>
+
+
+
+<!-- Generating Events -->
+<a name="container1069">
+<h3><font color="#800020">
+Generating Events</font>
+</h3><p>
+
+
+The call <code>ft_thread_generate(e)</code> generates the event <code>e</code> in the scheduler which was associated to it, when created. The
+call <code>ft_thread_generate_value(e,v)</code> adds <code>v</code> to the list of values associated to <code>e</code> during the current
+instant (these values can be read using <code>ft_thread_get_value</code>).
+</p><br>
+
+
+
+<!-- Awaiting Events -->
+<a name="container1070">
+<h3><font color="#800020">
+Awaiting Events</font>
+</h3><p>
+
+
+The call <code>ft_thread_await(e)</code> suspends the execution of the calling thread
+until the generation of the event <code>e</code>. Execution is resumed as soon as the
+event is generated. With  <code>ft_thread_await_n(e,i)</code>, the waiting takes at most
+<code>i</code> instants.
+</p><br>
+
+
+
+<!-- Selecting Events -->
+<a name="container1071">
+<h3><font color="#800020">
+Selecting Events</font>
+</h3><p>
+
+
+The call <code>ft_thread_select(k,array,mask)</code> suspends the execution of the calling thread
+until the generation of one element of <code>array</code> which is an array of <code>k</code> events. Then,
+<code>mask</code>, which is an array of <code>k</code> boolean values, is set accordingly.
+With  <code>ft_thread_select_n(k,array,mask,i)</code>, the waiting takes at most <code>i</code> instants.
+</p><br>
+
+
+
+<!-- Getting Events Values -->
+<a name="container1072">
+<h3><font color="#800020">
+Getting Events Values</font>
+</h3><p>
+
+
+The call <code>ft_thread_get_value(e,i,r)</code> is an attempt to get the <code>i</code><em>th</em> value
+associated to the event <code>e</code> during the current instant. If such a
+value exists, it is returned in <code>r</code> and the call immediately terminates. Otherwise,
+the value <strong>NULL</strong> is returned at the next instant. The return code of the call indicates if
+the call was sucessful or not.
+</p><br>
+
+
+</p><br>
+
+
+
+
+<!-- 3.5 Linking -->
+<a name="container1077">
+<TABLE width='100%'>
+<TR><TD bgcolor='#ffe4c4'>
+<FONT face='sans-serif' size='+1'><B>
+<font color="#800020">
+3.5 Linking</font>
+</B></FONT></TD></TR></TABLE><P>
+
+
+
+<!-- Link and Unlink -->
+<a name="container1075">
+<h3><font color="#800020">
+Link and Unlink</font>
+</h3><p>
+
+
+The call <code>ft_thread_unlink()</code> unlinks the calling thread
+<code>t</code> from the scheduler in which it was previously
+running. Then, <code>t</code> will no longer synchronize, instant after
+instant, with other threads linked to the scheduler. Actually, after
+unlinking, <code>t</code> behaves as a standard native thread.
+
+
+<p>
+
+
+The call <code>ft_thread_link(s)</code> links the calling thread to the
+scheduler <code>s</code>.  The calling thread must be unlinked when
+executing the call. The linkage becomes actual at the begining of the
+next instant of <code>s</code>.
+
+</p>
+
+</p><br>
+
+
+
+<!-- Locks -->
+<a name="container1076">
+<h3><font color="#800020">
+Locks</font>
+</h3><p>
+
+
+In presence of unlinked threads, locks can be needed to protect data
+shared between unlinked and linked threads. Standard mutexes are used
+for this purpose.  The call <code>ft_thread_mutex_lock(p)</code>, where
+<code>p</code> is a mutex, suspends the calling thread until the moment
+where <code>p</code> can be locked. The lock is released using <code>ft_thread_mutex_unlock</code>.  Locks owned by a thread are automatically
+released when the thread terminates definitively or is stopped.
+
+</p><br>
+
+
+</p><br>
+
+
+
+
+
+<!-- 3.6 Automata -->
+<a name="container1078">
+<TABLE width='100%'>
+<TR><TD bgcolor='#ffe4c4'>
+<FONT face='sans-serif' size='+1'><B>
+<font color="#800020">
+3.6 Automata</font>
+</B></FONT></TD></TR></TABLE><P>
+
+
+
+Automata are coded using macros. Here are the macros to define the automaton structure:
+<ul>
+ <li> <code>AUTOMATON(aut)</code> declares the automaton <code>aut</code>. 
+ <li> <code>DEFINE_AUTOMATON(aut)</code> starts definition of the automaton <code>aut</code>. 
+ <li> <code>BEGIN_AUTOMATON</code> starts the state list. 
+ <li> <code>END_AUTOMATON</code> ends the state list. 
+</ul>
+
+
+
+The following macros start the state whose number is <code>num</code>:
+<ul>
+ <li> <code>STATE(num)</code> introduces a standard state. 
+ <li> <code>STATE_AWAIT(num,event)</code> and <code>STATE_AWAIT_N(num,event,delay)</code> are states 
+to await <code>event</code>. 
+ <li> <code>STATE_JOIN(num,thread)</code> and <code>STATE_JOIN_N(num,thread,delay)</code> 
+are states to join <code>thread</code>. 
+ <li> <code>STATE_STAY(num,n)</code> is a state which keeps execution in it for <code>n</code> instants. 
+ <li> <code>STATE_GET_VALUE(num,event,n,result)</code> is a state to get the <code>n</code>th value 
+associated to <code>event</code>. 
+ <li> <font color="red"><strong>STATE_SELECT</strong></font>(num,n,array,mask) and <font color="red"><strong>STATE_SELECT_N</strong></font>(num,n,array,mask,delay) 
+generalise <code>STATE_AWAIT</code> and <code>STATE_AWAIT_N</code> to an array of events of length <code>n</code>. 
+</ul>
+
+
+Going from state to state is possible with:
+<ul>
+ <li> <code>GOTO(num)</code> blocks execution for the current instant 
+and sets the state for the next instant to be state <code>num</code>.
+ <li> <code>GOTO_NEXT</code> blocks execution for the current instant 
+and sets the state for the next instant to be the next state. 
+ <li> <code>IMMEDIATE(num)</code> forces execution to jump to state <code>num</code> 
+which is immediately executed. 
+ <li> <code>RETURN</code> immediately terminates the automaton. 
+</ul>
+
+
+Finally, the following macros define some special variables:
+<ul>
+ <li> <code>SELF</code> is the automaton. 
+ <li> <code>SET_LOCAL(data)</code> sets the local data of the automaton. 
+ <li> <code>LOCAL</code> is the local data of the automaton. 
+ <li> <code>ARGS</code> is the argument that is passed at creation to the automaton. 
+ <li> <code>RETURN_CODE</code> is the error code set by macros run during automaton execution. 
+</ul>
+</p><br>
+
+
+
+
+<!-- 3.7 Miscelaneous -->
+<a name="container1083">
+<TABLE width='100%'>
+<TR><TD bgcolor='#ffe4c4'>
+<FONT face='sans-serif' size='+1'><B>
+<font color="#800020">
+3.7 Miscelaneous</font>
+</B></FONT></TD></TR></TABLE><P>
+
+
+
+<!-- Current Thread -->
+<a name="container1079">
+<h3><font color="#800020">
+Current Thread</font>
+</h3><p>
+
+
+The calling thread is returned by <code>ft_thread_self()</code>.
+
+</p><br>
+
+
+
+<!-- Current Scheduler -->
+<a name="container1080">
+<h3><font color="#800020">
+Current Scheduler</font>
+</h3><p>
+
+
+
+The scheduler of the calling thread is returned by <code>ft_thread_scheduler()</code>.
+
+</p><br>
+
+
+
+<!-- Pthread -->
+<a name="container1081">
+<h3><font color="#800020">
+Pthread</font>
+</h3><p>
+
+
+The call <code>ft_pthread(t)</code> returns the native pthread which
+executes the fair thread <code>t</code>.  This function gives direct
+access to the <strong>Pthreads</strong> implementation of <strong>FairThreads</strong>. In the rest of the
+paper, native thread and pthread will be considered as synonymous.
+
+</p><br>
+
+
+
+<!-- Exiting -->
+<a name="container1082">
+<h3><font color="#800020">
+Exiting</font>
+</h3><p>
+
+
+The function <code>ft_exit</code> is equivalent to <code>pthread_exit</code>. The basic use of <code>ft_exit</code> is to terminate
+the pthread which is running the function <code>main</code>, without
+exiting from the whole process.
+
+</p><br>
+
+
+</p><br>
+
+
+
+
+
+
+
+
+</td></tr></table>
+
+<hr width="100%">
+ <font size="-1">
+This page has been generated by <a href="http://www-sop.inria.fr/mimosa/fp/Scribe">Scribe</a>.
+<br>
+
+Last update <em>Tue Jun  4 10:09:20 2002</em></font>
+</html>

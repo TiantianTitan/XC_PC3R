@@ -1,0 +1,1423 @@
+<!-- Man Pages -->
+<a name="container1222">
+<html>
+<title>8. Man Pages</title>
+
+ <head>  <style type="text/css">
+pre { font-family: monospace }
+ tt { font-family: monospace }
+ code { font-family: monospace }
+ p.flushright {text-align: right }
+ p.flushleft {text-align: left }
+ span.sc { font-variant: small-caps }
+</style>
+ <body
+ bgcolor="white" text="black">
+ </head>
+
+<table width="100%">
+<tr><td bgcolor="#ffe4c4"><br>
+<font color="#800020">
+<center><font face='sans-serif' size='+10'><b>
+ 8. Man Pages
+</b></font></center>
+</font>
+<br>
+</td></tr></table>
+
+
+<table cellpadding="3" width="100%"><tr>
+<td valign="top" bgcolor="#ffe4c4" width="180">
+
+<!-- Browsing -->
+<a name="container1261">
+<TABLE width='100%'>
+<TR><TD bgcolor='#800020'>
+<FONT face='sans-serif' size='+1'><B>
+<font color="#f7e0c0">
+Browsing</font>
+</B></FONT></TD></TR></TABLE><P>
+
+<table width="100%">
+<tr><th align="left" valign="top" colspan="1" rowspan="1">Home: </th><td align="right" colspan="1" rowspan="1"><a href="ft.html"><strong>Fair Threads in C</strong></a></td></tr>
+<tr><td align="left" colspan="1" rowspan="1"><br>
+</td></tr>
+<tr><th align="left" valign="top" colspan="1" rowspan="1">Previous chapter: </th><td align="right" colspan="1" rowspan="1"><a href="ft-7.html#container1124">Conclusion</a></td></tr>
+<tr><th align="left" valign="top" colspan="1" rowspan="1">Next chapter: </th><td align="right" colspan="1" rowspan="1"></td></tr>
+</table>
+</p><br>
+
+<!-- Man Pages -->
+<a name="container1263">
+<TABLE width='100%'>
+<TR><TD bgcolor='#800020'>
+<FONT face='sans-serif' size='+1'><B>
+<font color="#f7e0c0">
+Man Pages</font>
+</B></FONT></TD></TR></TABLE><P>
+
+<pre><font face="normal">8.1 <a href="ft-8.html#container1131">ft_scheduler_create</a>
+8.2 <a href="ft-8.html#container1140">ft_thread_create</a>
+8.3 <a href="ft-8.html#container1146">ft_event_create</a>
+8.4 <a href="ft-8.html#container1155">ft_scheduler_stop</a>
+8.5 <a href="ft-8.html#container1161">ft_scheduler_broadcast</a>
+8.6 <a href="ft-8.html#container1166">ft_thread_cooperate</a>
+8.7 <a href="ft-8.html#container1172">ft_thread_join</a>
+8.8 <a href="ft-8.html#container1180">ft_thread_generate</a>
+8.9 <a href="ft-8.html#container1186">ft_thread_get_value</a>
+8.10 <a href="ft-8.html#container1192">ft_thread_link</a>
+8.11 <a href="ft-8.html#container1196">ft_thread_self</a>
+8.12 <a href="ft-8.html#container1203">ft_thread_mutex_lock</a>
+8.13 <a href="ft-8.html#container1207">ft_exit</a>
+8.14 <a href="ft-8.html#container1210">ft_pthread</a>
+8.15 <a href="ft-8.html#container1221">ft_automaton_create</a>
+</font></pre></p><br>
+
+<!-- Chapters -->
+<a name="container1265">
+<TABLE width='100%'>
+<TR><TD bgcolor='#800020'>
+<FONT face='sans-serif' size='+1'><B>
+<font color="#f7e0c0">
+Chapters</font>
+</B></FONT></TD></TR></TABLE><P>
+
+<pre><font face="normal">1. <a href="ft-1.html#container1043">Introduction</a>
+2. <a href="ft-2.html#container1055">Rationale</a>
+3. <a href="ft-3.html#container1084">API Overview</a>
+4. <a href="ft-4.html#container1101">API</a>
+5. <a href="ft-5.html#container1111">Examples</a>
+6. <a href="ft-6.html#container1117">Related Work</a>
+7. <a href="ft-7.html#container1124">Conclusion</a>
+8. <a href="ft-8.html#container1222">Man Pages</a>
+</font></pre></p><br>
+</td>
+</td><td valign="top" width="100%">
+
+<!-- 8.1 ft_scheduler_create -->
+<a name="container1131">
+<TABLE width='100%'>
+<TR><TD bgcolor='#ffe4c4'>
+<FONT face='sans-serif' size='+1'><B>
+<font color="#800020">
+8.1 ft_scheduler_create</font>
+</B></FONT></TD></TR></TABLE><P>
+
+
+<!-- SYNOPSIS -->
+<a name="container1126">
+<h3><font color="#800020">
+SYNOPSIS</font>
+</h3><p>
+<font size="-1"><pre><font color="#00cf00"><strong>#include</strong></font> &lt;fthread.h&gt;
+
+ft_scheduler_t <font color="red"><strong>ft_scheduler_create</strong></font> (void);
+
+int <font color="red"><strong>ft_scheduler_start</strong></font> (ft_scheduler_t sched);
+</pre></font></p><br>
+
+<!-- DESCRIPTION -->
+<a name="container1127">
+<h3><font color="#800020">
+DESCRIPTION</font>
+</h3><p>
+
+<strong>ft_scheduler_create</strong> returns a new scheduler that will run the threads
+created in it, using <strong>ft_thread_create</strong>.
+
+The new scheduler <strong>sched</strong> starts running when the function <strong>ft_scheduler_start</strong>
+is called.
+</p><br>
+
+<!-- RETURN VALUES -->
+<a name="container1128">
+<h3><font color="#800020">
+RETURN VALUES</font>
+</h3><p>
+
+
+On success <strong>ft_scheduler_create</strong> returns the new scheduler; <strong>NULL</strong> is returned otherwise.
+On success the value 0 is returned by <strong>ft_scheduler_start</strong> and a non-zero error 
+code is returned otherwise.
+
+</p><br>
+
+<!-- ERRORS -->
+<a name="container1129">
+<h3><font color="#800020">
+ERRORS</font>
+</h3><p>
+
+
+<dl>
+ <dt><strong>NULL</strong></dt>
+<dd>The scheduler cannot be created.</dd>
+</dl>
+
+
+<dl>
+ <dt><strong>BADCREATE</strong></dt>
+<dd>The scheduler <strong>sched</strong>
+is not correctly created when started.</dd>
+</dl>
+
+
+</p><br>
+
+<!-- SEE ALSO -->
+<a name="container1130">
+<h3><font color="#800020">
+SEE ALSO</font>
+</h3><p>
+
+<strong>ft_thread_create</strong> (3).
+</p><br>
+</p><br>
+
+<!-- 8.2 ft_thread_create -->
+<a name="container1140">
+<TABLE width='100%'>
+<TR><TD bgcolor='#ffe4c4'>
+<FONT face='sans-serif' size='+1'><B>
+<font color="#800020">
+8.2 ft_thread_create</font>
+</B></FONT></TD></TR></TABLE><P>
+
+
+<!-- SYNOPSIS -->
+<a name="container1132">
+<h3><font color="#800020">
+SYNOPSIS</font>
+</h3><p>
+
+
+<font size="-1"><pre><font color="#00cf00"><strong>#include</strong></font> &lt;fthread.h&gt;
+
+ft_thread_t <font color="red"><strong>ft_thread_create</strong></font> (ft_scheduler_t sched,
+                              void (*runnable)(void*),
+                              void (*cleanup)(void*),                     
+                              void *args);
+</pre></font>
+</p><br>
+
+<!-- DESCRIPTION -->
+<a name="container1136">
+<h3><font color="#800020">
+DESCRIPTION</font>
+</h3><p>
+
+
+
+<p>
+
+<strong>ft_thread_create</strong> returns a new thread of control and links it to the
+scheduler <strong>sched</strong>. While linked in <strong>sched</strong>, the new thread
+will execute concurrently with the other threads linked in it.
+
+Actual starting of the new thread is asynchronous with the creation.
+
+The  new  thread applies the function <strong>runnable</strong> passing it <strong>args</strong> as first
+argument. The new thread terminates when it executes <strong>ft_exit</strong> or when it 
+returns from the <strong>runnable</strong> function.</p>
+ 
+
+
+<p>
+When stopped (by <strong>ft_scheduler_stop</strong>), the new thread
+applies the function <strong>cleanup</strong>, if it is not <strong>NULL</strong>, passing
+it <strong>args</strong> as first argument.</p>
+
+
+
+<p>
+ A pthread is created with each fair thread. This pthread is
+initially attached. It can be detached using <strong>ft_pthread</strong> and
+<strong>pthread_detach</strong>.  </p>
+
+
+</p><br>
+
+<!-- RETURN VALUES -->
+<a name="container1137">
+<h3><font color="#800020">
+RETURN VALUES</font>
+</h3><p>
+
+
+On success, <strong>ft_thread_create</strong> returns a new thread; <strong>NULL</strong> is returned otherwise.
+
+</p><br>
+
+<!-- ERRORS -->
+<a name="container1138">
+<h3><font color="#800020">
+ERRORS</font>
+</h3><p>
+
+
+<dl>
+ <dt><strong>NULL</strong></dt>
+<dd>The thread cannot be created, or the scheduler <strong>sched</strong>
+is not correctly created.</dd>
+</dl>
+
+
+</p><br>
+
+<!-- SEE ALSO -->
+<a name="container1139">
+<h3><font color="#800020">
+SEE ALSO</font>
+</h3><p>
+
+
+<strong>ft_exit</strong> (3),
+<strong>ft_scheduler_create</strong> (3),
+<strong>ft_scheduler_stop</strong> (3),
+<strong>ft_pthread</strong> (3).
+</p><br>
+</p><br>
+
+<!-- 8.3 ft_event_create -->
+<a name="container1146">
+<TABLE width='100%'>
+<TR><TD bgcolor='#ffe4c4'>
+<FONT face='sans-serif' size='+1'><B>
+<font color="#800020">
+8.3 ft_event_create</font>
+</B></FONT></TD></TR></TABLE><P>
+
+
+<!-- SYNOPSIS -->
+<a name="container1141">
+<h3><font color="#800020">
+SYNOPSIS</font>
+</h3><p>
+<font size="-1"><pre><font color="#00cf00"><strong>#include</strong></font> &lt;fthread.h&gt;
+
+ft_event_t <font color="red"><strong>ft_event_create</strong></font> (ft_scheduler_t sched);
+</pre></font></p><br>
+
+<!-- DESCRIPTION -->
+<a name="container1142">
+<h3><font color="#800020">
+DESCRIPTION</font>
+</h3><p>
+
+<strong>ft_event_create</strong> returns a new event which is created in the scheduler <strong>sched</strong>.
+The event can be generated by <strong>ft_event_generate</strong> or <strong>ft_scheduler_broadcast</strong>,
+and it can awaited by <strong>ft_event_await</strong>.
+</p><br>
+
+<!-- RETURN VALUES -->
+<a name="container1143">
+<h3><font color="#800020">
+RETURN VALUES</font>
+</h3><p>
+
+On success, the new event is returned and set to absent; <strong>NULL</strong> is returned otherwise.
+</p><br>
+
+<!-- ERRORS -->
+<a name="container1144">
+<h3><font color="#800020">
+ERRORS</font>
+</h3><p>
+
+
+<dl>
+ <dt><strong>NULL</strong></dt>
+<dd>The event cannot be created or the scheduler  <strong>sched</strong>
+is not correctly created.</dd>
+</dl>
+
+
+</p><br>
+
+<!-- SEE ALSO -->
+<a name="container1145">
+<h3><font color="#800020">
+SEE ALSO</font>
+</h3><p>
+
+<strong>ft_event_generate</strong> (3),
+<strong>ft_scheduler_broadcast</strong> (3),
+<strong>ft_event_await</strong> (3).
+</p><br>
+</p><br>
+
+<!-- 8.4 ft_scheduler_stop -->
+<a name="container1155">
+<TABLE width='100%'>
+<TR><TD bgcolor='#ffe4c4'>
+<FONT face='sans-serif' size='+1'><B>
+<font color="#800020">
+8.4 ft_scheduler_stop</font>
+</B></FONT></TD></TR></TABLE><P>
+
+
+<!-- SYNOPSIS -->
+<a name="container1147">
+<h3><font color="#800020">
+SYNOPSIS</font>
+</h3><p>
+<font size="-1"><pre><font color="#00cf00"><strong>#include</strong></font> &lt;fthread.h&gt;
+
+int <font color="red"><strong>ft_scheduler_stop</strong></font>    (ft_thread_t th);
+
+int <font color="red"><strong>ft_scheduler_suspend</strong></font> (ft_thread_t th);
+
+int <font color="red"><strong>ft_scheduler_resume</strong></font>  (ft_thread_t th);
+</pre></font></p><br>
+
+<!-- DESCRIPTION -->
+<a name="container1151">
+<h3><font color="#800020">
+DESCRIPTION</font>
+</h3><p>
+
+
+
+<p>
+<strong>ft_scheduler_stop</strong> asks the scheduler running the thread
+<strong>th</strong> to force termination of it. Nothing special happens if
+the thread is already terminated.  Otherwise, at the begining of the
+next instant, <strong>th</strong> executes the function <strong>cleanup</strong> if
+it exists, or otherwise terminates immediately. </p>
+
+
+
+<p>
+<strong>ft_scheduler_suspend</strong> asks the scheduler running the
+thread <strong>th</strong> to suspend execution of it. The suspension will
+become actual at the beginning of the next instant of the scheduler. </p>
+
+
+
+<p>
+ <strong>ft_scheduler_resume</strong> asks the scheduler running the
+thread <strong>th</strong> to resume execution of it. The resume will become
+actual at the beginning of the next instant of the
+scheduler. Suspension has higher priority than resume: if a thread is
+suspended and resumed during the same instant, then the thread will be
+suspended. A suspended thread which is stopped is first resumed.  </p>
+
+
+</p><br>
+
+<!-- RETURN VALUES -->
+<a name="container1152">
+<h3><font color="#800020">
+RETURN VALUES</font>
+</h3><p>
+
+On success, the value 0 is returned.
+On error, a non-zero error code is returned.
+</p><br>
+
+<!-- ERRORS -->
+<a name="container1153">
+<h3><font color="#800020">
+ERRORS</font>
+</h3><p>
+
+<dl>
+ <dt><strong>BADCREATE</strong></dt>
+<dd>The thread <strong>th</strong> is not correctly created.</dd>
+</dl>
+
+<dl>
+ <dt><strong>BADLINK</strong></dt>
+<dd>The thread <strong>th</strong> is unlinked.</dd>
+</dl>
+
+<dl>
+ <dt><strong>BADMEM</strong></dt>
+<dd>Not enough memory (the order cannot be stored by the scheduler).</dd>
+</dl>
+
+</p><br>
+
+<!-- SEE ALSO -->
+<a name="container1154">
+<h3><font color="#800020">
+SEE ALSO</font>
+</h3><p>
+
+<strong>ft_thread_create</strong> (3),
+<strong>ft_scheduler_create</strong> (3).
+</p><br>
+</p><br>
+
+<!-- 8.5 ft_scheduler_broadcast -->
+<a name="container1161">
+<TABLE width='100%'>
+<TR><TD bgcolor='#ffe4c4'>
+<FONT face='sans-serif' size='+1'><B>
+<font color="#800020">
+8.5 ft_scheduler_broadcast</font>
+</B></FONT></TD></TR></TABLE><P>
+
+
+<!-- SYNOPSIS -->
+<a name="container1156">
+<h3><font color="#800020">
+SYNOPSIS</font>
+</h3><p>
+<font size="-1"><pre><font color="#00cf00"><strong>#include</strong></font> &lt;fthread.h&gt;
+
+int <font color="red"><strong>ft_scheduler_broadcast</strong></font>       (ft_event_t evt);
+
+int <font color="red"><strong>ft_scheduler_broadcast_value</strong></font> (ft_event_t evt,void *val);
+</pre></font></p><br>
+
+<!-- DESCRIPTION -->
+<a name="container1157">
+<h3><font color="#800020">
+DESCRIPTION</font>
+</h3><p>
+
+
+<strong>ft_scheduler_broadcast</strong> asks the scheduler of the event <strong>evt</strong> to broadcast it.
+The event will be generated during the next instant of the scheduler.
+The value <strong>val</strong> is associated to <strong>evt</strong> when the function
+<strong>ft_scheduler_broadcast_value</strong> is used.
+</p><br>
+
+<!-- RETURN VALUES -->
+<a name="container1158">
+<h3><font color="#800020">
+RETURN VALUES</font>
+</h3><p>
+
+On success, the value 0 is returned.
+On error, a non-zero error code is returned.
+</p><br>
+
+<!-- ERRORS -->
+<a name="container1159">
+<h3><font color="#800020">
+ERRORS</font>
+</h3><p>
+
+<dl>
+ <dt><strong>BADCREATE</strong></dt>
+<dd>The event <strong>evt</strong> is not correctly created.</dd>
+</dl>
+
+<dl>
+ <dt><strong>BADMEM</strong></dt>
+<dd>Not enough memory (the scheduler cannot store the broadcast order).</dd>
+</dl>
+
+</p><br>
+
+<!-- SEE ALSO -->
+<a name="container1160">
+<h3><font color="#800020">
+SEE ALSO</font>
+</h3><p>
+
+<strong>ft_event_create</strong> (3).
+</p><br>
+</p><br>
+
+<!-- 8.6 ft_thread_cooperate -->
+<a name="container1166">
+<TABLE width='100%'>
+<TR><TD bgcolor='#ffe4c4'>
+<FONT face='sans-serif' size='+1'><B>
+<font color="#800020">
+8.6 ft_thread_cooperate</font>
+</B></FONT></TD></TR></TABLE><P>
+
+
+<!-- SYNOPSIS -->
+<a name="container1162">
+<h3><font color="#800020">
+SYNOPSIS</font>
+</h3><p>
+<font size="-1"><pre><font color="#00cf00"><strong>#include</strong></font> &lt;fthread.h&gt;
+
+int <font color="red"><strong>ft_thread_cooperate</strong></font>   (void);
+
+int <font color="red"><strong>ft_thread_cooperate_n</strong></font> (int n);
+</pre></font></p><br>
+
+<!-- DESCRIPTION -->
+<a name="container1163">
+<h3><font color="#800020">
+DESCRIPTION</font>
+</h3><p>
+
+<strong>ft_thread_cooperate</strong> makes the calling thread cooperate by returning
+the control to the scheduler in which it is running.
+
+The call <strong>ft_thread_cooperate_n (k)</strong> is equivalent to <strong>for (i=0;i&lt;k;i++) ft_thread_cooperate ()</strong>.  
+
+</p><br>
+
+<!-- RETURN VALUES -->
+<a name="container1164">
+<h3><font color="#800020">
+RETURN VALUES</font>
+</h3><p>
+
+On success, the value 0 is returned.
+On error, a non-zero error code is returned.
+</p><br>
+
+<!-- ERRORS -->
+<a name="container1165">
+<h3><font color="#800020">
+ERRORS</font>
+</h3><p>
+
+<dl>
+ <dt><strong>BADLINK</strong></dt>
+<dd>The calling thread is unlinked.</dd>
+</dl>
+
+</p><br>
+</p><br>
+
+<!-- 8.7 ft_thread_join -->
+<a name="container1172">
+<TABLE width='100%'>
+<TR><TD bgcolor='#ffe4c4'>
+<FONT face='sans-serif' size='+1'><B>
+<font color="#800020">
+8.7 ft_thread_join</font>
+</B></FONT></TD></TR></TABLE><P>
+
+
+<!-- SYNOPSIS -->
+<a name="container1167">
+<h3><font color="#800020">
+SYNOPSIS</font>
+</h3><p>
+<font size="-1"><pre><font color="#00cf00"><strong>#include</strong></font> &lt;fthread.h&gt;
+
+int <font color="red"><strong>ft_thread_join</strong></font>   (ft_thread_t th);
+
+int <font color="red"><strong>ft_thread_join_n</strong></font> (ft_thread_t th,int n);
+</pre></font></p><br>
+
+<!-- DESCRIPTION -->
+<a name="container1168">
+<h3><font color="#800020">
+DESCRIPTION</font>
+</h3><p>
+
+
+<strong>ft_thread_join</strong> suspends the execution of the calling thread
+until the thread <strong>th</strong> terminates (either by reaching the end
+of the function it run, or by executing <font size="-1"><tt>ft_exit</tt></font>) or is
+stopped (by <font size="-1"><tt>ft_scheduler_stop</tt></font>).  If <strong>th</strong> is already
+terminated, the call immediately terminates.
+
+<strong>ft_thread_join_n (th,i)</strong> waits for at most <strong>i</strong>
+instants for termination of <strong>th</strong>.
+
+</p><br>
+
+<!-- RETURN VALUES -->
+<a name="container1169">
+<h3><font color="#800020">
+RETURN VALUES</font>
+</h3><p>
+
+
+On success, the value 0 is returned. On error, a non-zero error code is returned.
+
+</p><br>
+
+<!-- ERRORS -->
+<a name="container1170">
+<h3><font color="#800020">
+ERRORS</font>
+</h3><p>
+
+
+<dl>
+ <dt><strong>BADCREATE</strong></dt>
+<dd>The thread  <strong>th</strong>
+is not correctly created.</dd>
+</dl>
+
+
+<dl>
+ <dt><strong>BADLINK</strong></dt>
+<dd>The calling thread is unlinked.</dd>
+</dl>
+
+
+<dl>
+ <dt><strong>TIMEOUT</strong></dt>
+<dd>The timeout is reached before the thread is joined.</dd>
+</dl>
+
+
+</p><br>
+
+<!-- SEE ALSO -->
+<a name="container1171">
+<h3><font color="#800020">
+SEE ALSO</font>
+</h3><p>
+
+<strong>ft_thread_create</strong> (3),
+<strong>ft_exit</strong> (3),
+<strong>ft_scheduler_stop</strong> (3).
+</p><br>
+</p><br>
+
+<!-- 8.8 ft_thread_generate -->
+<a name="container1180">
+<TABLE width='100%'>
+<TR><TD bgcolor='#ffe4c4'>
+<FONT face='sans-serif' size='+1'><B>
+<font color="#800020">
+8.8 ft_thread_generate</font>
+</B></FONT></TD></TR></TABLE><P>
+
+
+<!-- SYNOPSIS -->
+<a name="container1173">
+<h3><font color="#800020">
+SYNOPSIS</font>
+</h3><p>
+<font size="-1"><pre><font color="#00cf00"><strong>#include</strong></font> &lt;fthread.h&gt;
+
+int <font color="red"><strong>ft_thread_generate</strong></font>       (ft_event_t evt);
+
+int <font color="red"><strong>ft_thread_generate_value</strong></font> (ft_event_t evt,void *val);
+
+int <font color="red"><strong>ft_thread_await</strong></font>          (ft_event_t evt);
+
+int <font color="red"><strong>ft_thread_await_n</strong></font>        (ft_event_t evt,int n);
+
+int <font color="red"><strong>ft_thread_select</strong></font>         (int len,ft_event_t *array,int *mask);
+
+int <font color="red"><strong>ft_thread_select_n</strong></font>       (int len,ft_event_t *array,int *mask,int timeout);
+</pre></font></p><br>
+
+<!-- DESCRIPTION -->
+<a name="container1176">
+<h3><font color="#800020">
+DESCRIPTION</font>
+</h3><p>
+
+<strong>ft_thread_generate</strong> generates the event <strong>evt</strong> for the current instant of
+the scheduler in which the calling thread is running. The event is thus present for this
+instant; it will be automatically reset to absent at the begining of the next instant.
+
+The value <strong>val</strong> is associated
+to <strong>evt</strong> when <strong>ft_thread_generate_value</strong> is used.
+
+
+<p>
+
+<strong>ft_thread_await</strong> suspends the calling thread until <strong>evt</strong> becomes generated
+in the scheduler in which it is running. The waiting takes as many instants as the
+generation of <strong>evt</strong> takes.
+
+<strong>ft_thread_await_n (evt,k)</strong> is similar to <strong>ft_thread_await (evt)</strong> except
+that the waiting of <strong>evt</strong> lasts at most <strong>k</strong> instants.</p>
+
+
+
+<p>
+ <strong>ft_thread_select</strong> suspends the calling thread until one
+element of <strong>array</strong> becomes generated in the scheduler in which
+the thread is running; <strong>array</strong> should be of length
+<strong>k</strong>.  On resumption, <strong>mask</strong> which is an array of
+<strong>k</strong> integers, is set accordingly: <strong>mask[i]</strong> is 1 if
+<strong>array[i]</strong> was generated; <strong>mask[i]</strong> is 0,
+otherwise.
+
+<strong>ft_thread_select_n (k,array,mask,p)</strong> is similar to <strong>ft_thread_select (k,array,mask)</strong> except
+that the waiting lasts at most <strong>p</strong> instants.</p>
+
+</p><br>
+
+<!-- RETURN VALUES -->
+<a name="container1177">
+<h3><font color="#800020">
+RETURN VALUES</font>
+</h3><p>
+
+On success the value 0 is returned and a non-zero error code is returned on error.
+</p><br>
+
+<!-- ERRORS -->
+<a name="container1178">
+<h3><font color="#800020">
+ERRORS</font>
+</h3><p>
+
+<dl>
+ <dt><strong>BADCREATE</strong></dt>
+<dd>The exist an event (either <strong>evt</strong> or an element of <strong>array</strong>)
+which is not correctly created.</dd>
+</dl>
+
+
+
+<dl>
+ <dt><strong>BADLINK</strong></dt>
+<dd>Either the calling thread is unlinked, or the scheduler of the calling thread 
+and the one of a considered event (<strong>evt</strong> or an element of <strong>array</strong>) are different.</dd>
+</dl>
+
+
+<dl>
+ <dt><strong>BADMEM</strong></dt>
+<dd>Not enough memory (can only occur with 
+<strong>ft_thread_generate_value</strong>). </dd>
+</dl>
+
+
+<dl>
+ <dt><strong>TIMEOUT</strong></dt>
+<dd>The timeout is reached.</dd>
+</dl>
+
+
+</p><br>
+
+<!-- SEE ALSO -->
+<a name="container1179">
+<h3><font color="#800020">
+SEE ALSO</font>
+</h3><p>
+
+<strong>ft_event_create</strong> (3),
+<strong>ft_thread_get_value</strong> (3).
+</p><br>
+</p><br>
+
+<!-- 8.9 ft_thread_get_value -->
+<a name="container1186">
+<TABLE width='100%'>
+<TR><TD bgcolor='#ffe4c4'>
+<FONT face='sans-serif' size='+1'><B>
+<font color="#800020">
+8.9 ft_thread_get_value</font>
+</B></FONT></TD></TR></TABLE><P>
+
+
+<!-- SYNOPSIS -->
+<a name="container1181">
+<h3><font color="#800020">
+SYNOPSIS</font>
+</h3><p>
+<font size="-1"><pre><font color="#00cf00"><strong>#include</strong></font> &lt;fthread.h&gt;
+
+int <font color="red"><strong>ft_thread_get_value</strong></font> (ft_event_t evt,int n,void **result);
+</pre></font></p><br>
+
+<!-- DESCRIPTION -->
+<a name="container1182">
+<h3><font color="#800020">
+DESCRIPTION</font>
+</h3><p>
+
+
+<strong>ft_thread_get_value</strong> returns the <strong>n</strong>th value
+associated during the current instant to the event <strong>evt</strong>
+through calls of <strong>ft_event_generate_value</strong> or <strong>ft_scheduler_broadcast_value</strong>.  If such a value exists, <strong>ft_thread_get_value</strong> sets <strong>result</strong> with a reference to it
+and terminates immediately (that is, during the current instant).
+Otherwise, it terminates at the next instant (returning <strong>NEXT</strong>) and <strong>result</strong> is
+then set to <strong>NULL</strong>.  
+
+</p><br>
+
+<!-- RETURN VALUES -->
+<a name="container1183">
+<h3><font color="#800020">
+RETURN VALUES</font>
+</h3><p>
+
+
+On success, the value 0 is returned (during the current instant).
+Otherwise, a non-zero error code is returned. 
+
+</p><br>
+
+<!-- ERRORS -->
+<a name="container1184">
+<h3><font color="#800020">
+ERRORS</font>
+</h3><p>
+
+
+<dl>
+ <dt><strong>BADCREATE</strong></dt>
+<dd>The event <strong>evt</strong> is not correctly created.</dd>
+</dl>
+
+
+<dl>
+ <dt><strong>BADLINK</strong></dt>
+<dd>Either the calling thread is unlinked, or the scheduler of the calling thread and the one of 
+<strong>evt</strong> are different.</dd>
+</dl>
+
+
+<dl>
+ <dt><strong>NEXT</strong></dt>
+<dd>
+Less than <strong>n</strong> values where actually associated to generations of <strong>evt</strong>
+during the previous instant. 
+</dd>
+</dl>
+
+
+</p><br>
+
+<!-- SEE ALSO -->
+<a name="container1185">
+<h3><font color="#800020">
+SEE ALSO</font>
+</h3><p>
+
+<strong>ft_thread_generate_value</strong> (3), 
+<strong>ft_scheduler_broadcast_value</strong> (3).
+</p><br>
+</p><br>
+
+<!-- 8.10 ft_thread_link -->
+<a name="container1192">
+<TABLE width='100%'>
+<TR><TD bgcolor='#ffe4c4'>
+<FONT face='sans-serif' size='+1'><B>
+<font color="#800020">
+8.10 ft_thread_link</font>
+</B></FONT></TD></TR></TABLE><P>
+
+
+<!-- SYNOPSIS -->
+<a name="container1187">
+<h3><font color="#800020">
+SYNOPSIS</font>
+</h3><p>
+<font size="-1"><pre><font color="#00cf00"><strong>#include</strong></font> &lt;fthread.h&gt;
+
+int <font color="red"><strong>ft_thread_unlink</strong></font> (void);
+
+int <font color="red"><strong>ft_thread_link</strong></font>   (ft_scheduler_t sched);
+</pre></font></p><br>
+
+<!-- DESCRIPTION -->
+<a name="container1188">
+<h3><font color="#800020">
+DESCRIPTION</font>
+</h3><p>
+
+
+<strong>ft_thread_unlink</strong> unlinks the calling thread from the
+scheduler which is running it.  Execution of the thread suspends until
+the begining of the next instant of the scheduler. At that point, the
+thread turns into a standard thread, not linked to any scheduler,
+and it resumes execution autonomously.
+
+Initialy, a fair thread is automatically linked to the scheduler in
+which it is created (by <strong>ft_thread_create</strong>).
+
+<strong>ft_thread_link</strong> links the calling thread to the scheduler <strong>sched</strong>.
+The thread must be unlinked. Execution suspends until <strong>sched</strong> gives the
+control to the thread; then, the thread resumes execution, being
+scheduled by <strong>sched</strong>.
+
+</p><br>
+
+<!-- RETURN VALUES -->
+<a name="container1189">
+<h3><font color="#800020">
+RETURN VALUES</font>
+</h3><p>
+
+On success, the value 0 is returned. On error, a non-zero error code is returned.
+</p><br>
+
+<!-- ERRORS -->
+<a name="container1190">
+<h3><font color="#800020">
+ERRORS</font>
+</h3><p>
+
+
+<dl>
+ <dt><strong>BADCREATE</strong></dt>
+<dd>The scheduler <strong>sched</strong> is not correctly created.</dd>
+</dl>
+
+
+<dl>
+ <dt><strong>BADLINK</strong></dt>
+<dd>
+The calling thread is already linked while running
+<strong>ft_thread_link</strong>, or it is unlinked while running <strong>ft_thread_unlink</strong>.
+</dd>
+</dl>
+
+
+<dl>
+ <dt><strong>BADMEM</strong></dt>
+<dd>
+Not enough memory (the scheduler cannot store the link/unlink order).
+</dd>
+</dl>
+
+</p><br>
+
+<!-- SEE ALSO -->
+<a name="container1191">
+<h3><font color="#800020">
+SEE ALSO</font>
+</h3><p>
+
+<strong>ft_thread_create</strong> (3).
+</p><br>
+</p><br>
+
+<!-- 8.11 ft_thread_self -->
+<a name="container1196">
+<TABLE width='100%'>
+<TR><TD bgcolor='#ffe4c4'>
+<FONT face='sans-serif' size='+1'><B>
+<font color="#800020">
+8.11 ft_thread_self</font>
+</B></FONT></TD></TR></TABLE><P>
+
+
+<!-- SYNOPSIS -->
+<a name="container1193">
+<h3><font color="#800020">
+SYNOPSIS</font>
+</h3><p>
+<font size="-1"><pre><font color="#00cf00"><strong>#include</strong></font> &lt;fthread.h&gt;
+
+ft_thread_t    <font color="red"><strong>ft_thread_self</strong></font>      (void);
+
+ft_scheduler_t <font color="red"><strong>ft_thread_scheduler</strong></font> (void);
+</pre></font></p><br>
+
+<!-- DESCRIPTION -->
+<a name="container1194">
+<h3><font color="#800020">
+DESCRIPTION</font>
+</h3><p>
+
+
+<strong>ft_thread_self</strong> returns the calling thread.
+<strong>ft_thread_scheduler</strong> returns the scheduler of the calling thread.
+
+</p><br>
+
+<!-- ERRORS -->
+<a name="container1195">
+<h3><font color="#800020">
+ERRORS</font>
+</h3><p>
+
+
+The value <strong>NULL</strong> is returned by <strong>ft_thread_self</strong> when the calling thread is not
+correctly created, or by <strong>ft_thread_scheduler</strong> when the
+calling thread is not correctly created or is unlinked.
+
+
+</p><br>
+</p><br>
+
+<!-- 8.12 ft_thread_mutex_lock -->
+<a name="container1203">
+<TABLE width='100%'>
+<TR><TD bgcolor='#ffe4c4'>
+<FONT face='sans-serif' size='+1'><B>
+<font color="#800020">
+8.12 ft_thread_mutex_lock</font>
+</B></FONT></TD></TR></TABLE><P>
+
+
+<!-- SYNOPSIS -->
+<a name="container1197">
+<h3><font color="#800020">
+SYNOPSIS</font>
+</h3><p>
+<font size="-1"><pre><font color="#00cf00"><strong>#include</strong></font> &lt;fthread.h&gt;
+
+int <font color="red"><strong>ft_thread_mutex_lock</strong></font>   (pthread_mutex_t *mutex);
+
+int <font color="red"><strong>ft_thread_mutex_unlock</strong></font> (pthread_mutex_t *mutex);
+</pre></font></p><br>
+
+<!-- DESCRIPTION -->
+<a name="container1199">
+<h3><font color="#800020">
+DESCRIPTION</font>
+</h3><p>
+
+
+For unlinked threads, <strong>ft_thread_mutex_lock</strong> is like <strong>pthread_mutex_lock</strong> and
+<strong>ft_thread_mutex_unlock</strong>  is like <strong>pthread_mutex_unlock</strong>.
+
+
+<p>
+
+ For linked threads, <strong>ft_thread_mutex_lock</strong>
+suspends the calling thread until <strong>mutex</strong> can be locked. Thus,
+while <strong>mutex</strong> is unavailable, other threads in the scheduler can continue to run (this would not be the case
+if <strong>pthread_mutex_lock</strong> where used instead of <strong>ft_thread_mutex_lock</strong>). All locks owned by a
+thread are automatically released when it terminates or when it is stopped. 
+</p>
+
+
+</p><br>
+
+<!-- RETURN VALUES -->
+<a name="container1200">
+<h3><font color="#800020">
+RETURN VALUES</font>
+</h3><p>
+
+On success <strong>ft_thread_mutex_lock</strong> and <strong>ft_thread_mutex_unlock</strong> both return the value 0.
+On error, a non-zero error code is returned.
+</p><br>
+
+<!-- ERRORS -->
+<a name="container1201">
+<h3><font color="#800020">
+ERRORS</font>
+</h3><p>
+
+Errors returned are the ones returned by <strong>pthread_mutex_lock</strong> and <strong>pthread_mutex_unlock</strong>. 
+</p><br>
+
+<!-- SEE ALSO -->
+<a name="container1202">
+<h3><font color="#800020">
+SEE ALSO</font>
+</h3><p>
+
+<strong>ft_thread_link</strong> (3), 
+<strong>ft_thread_unlink</strong> (3).
+</p><br>
+</p><br>
+
+<!-- 8.13 ft_exit -->
+<a name="container1207">
+<TABLE width='100%'>
+<TR><TD bgcolor='#ffe4c4'>
+<FONT face='sans-serif' size='+1'><B>
+<font color="#800020">
+8.13 ft_exit</font>
+</B></FONT></TD></TR></TABLE><P>
+
+
+<!-- SYNOPSIS -->
+<a name="container1204">
+<h3><font color="#800020">
+SYNOPSIS</font>
+</h3><p>
+<font size="-1"><pre><font color="#00cf00"><strong>#include</strong></font> &lt;fthread.h&gt;
+
+void <font color="red"><strong>ft_exit</strong></font> (void);
+</pre></font></p><br>
+
+<!-- DESCRIPTION -->
+<a name="container1205">
+<h3><font color="#800020">
+DESCRIPTION</font>
+</h3><p>
+
+<strong>ft_exit</strong> forces the calling thread to terminate.
+</p><br>
+
+<!-- RETURN VALUES -->
+<a name="container1206">
+<h3><font color="#800020">
+RETURN VALUES</font>
+</h3><p>
+
+The function <strong>ft_exit</strong> never returns.
+</p><br>
+</p><br>
+
+<!-- 8.14 ft_pthread -->
+<a name="container1210">
+<TABLE width='100%'>
+<TR><TD bgcolor='#ffe4c4'>
+<FONT face='sans-serif' size='+1'><B>
+<font color="#800020">
+8.14 ft_pthread</font>
+</B></FONT></TD></TR></TABLE><P>
+
+
+<!-- SYNOPSIS -->
+<a name="container1208">
+<h3><font color="#800020">
+SYNOPSIS</font>
+</h3><p>
+<font size="-1"><pre><font color="#00cf00"><strong>#include</strong></font> &lt;fthread.h&gt;
+
+pthread_t <font color="red"><strong>ft_pthread</strong></font> (ft_thread_t thread);
+</pre></font></p><br>
+
+<!-- DESCRIPTION -->
+<a name="container1209">
+<h3><font color="#800020">
+DESCRIPTION</font>
+</h3><p>
+
+
+The function <strong>ft_pthread</strong> returns the pthread on which 
+the fair thread <strong>thread</strong> is built.
+</p><br>
+</p><br>
+
+<!-- 8.15 ft_automaton_create -->
+<a name="container1221">
+<TABLE width='100%'>
+<TR><TD bgcolor='#ffe4c4'>
+<FONT face='sans-serif' size='+1'><B>
+<font color="#800020">
+8.15 ft_automaton_create</font>
+</B></FONT></TD></TR></TABLE><P>
+
+
+<!-- SYNOPSIS -->
+<a name="container1211">
+<h3><font color="#800020">
+SYNOPSIS</font>
+</h3><p>
+
+
+<font size="-1"><pre><font color="#00cf00"><strong>#include</strong></font> &lt;fthread.h&gt;
+
+ft_thread_t <font color="red"><strong>ft_automaton_create</strong></font> (ft_scheduler_t sched,
+                                 void (*automaton)(ft_thread_t),
+                                 void (*cleanup)(void*),                     
+                                 void *args);
+
+<font color="red"><strong>AUTOMATON</strong></font>(name) 
+<font color="red"><strong>DEFINE_AUTOMATON</strong></font>(name) 
+<font color="red"><strong>BEGIN_AUTOMATON</strong></font>
+<font color="red"><strong>END_AUTOMATON</strong></font>  
+
+<font color="red"><strong>STATE</strong></font>(num)    
+<font color="red"><strong>STATE_AWAIT</strong></font>(num,event) 
+<font color="red"><strong>STATE_AWAIT_N</strong></font>(num,event,delay)
+<font color="red"><strong>STATE_GET_VALUE</strong></font>(num,event,n,result) 
+<font color="red"><strong>STATE_STAY</strong></font>(num,delay)               
+<font color="red"><strong>STATE_JOIN</strong></font>(num,thread)              
+<font color="red"><strong>STATE_JOIN_N</strong></font>(num,thread,delay)
+<font color="red"><strong>STATE_SELECT</strong></font>(num,n,array,mask)              
+<font color="red"><strong>STATE_SELECT_N</strong></font>(num,n,array,mask,delay)
+
+<font color="red"><strong>GOTO</strong></font>(num) 
+<font color="red"><strong>GOTO_NEXT</strong></font> 
+<font color="red"><strong>IMMEDIATE</strong></font>(num)
+<font color="red"><strong>RETURN</strong></font>
+
+<font color="red"><strong>SELF</strong></font>   
+<font color="red"><strong>SET_LOCAL</strong></font>(data) 
+<font color="red"><strong>LOCAL</strong></font>   
+<font color="red"><strong>ARGS</strong></font>  
+<font color="red"><strong>RETURN_CODE</strong></font> 
+</pre></font>
+</p><br>
+
+<!-- DESCRIPTION -->
+<a name="container1215">
+<h3><font color="#800020">
+DESCRIPTION</font>
+</h3><p>
+
+
+
+<!-- Automata Creation -->
+<a name="container1213">
+<h4><font color="#800020">
+</font>
+</h4><p>
+
+
+
+<p>
+
+<strong>ft_automaton_create</strong> is very similar to <strong>ft_thread_create</strong> except that a new automaton
+is returned. The automaton does not have its own
+pthread to execute, but it is run by the one of the scheduler.
+
+
+The  automaton applies the function <strong>automaton</strong>. Argument <strong>args</strong> can be accessed
+in the automaton definition with the macro <strong>ARGS</strong>.
+</p>
+ 
+
+</p><br>
+
+
+
+<!-- Macros -->
+<a name="container1214">
+<h4><font color="#800020">
+</font>
+</h4><p>
+
+
+<ul>
+ <li> <code>AUTOMATON(name)</code> declares the automaton <code>name</code>. 
+ <li> <code>DEFINE_AUTOMATON(name)</code> starts definion of the automaton <code>name</code>. 
+ <li> <code>BEGIN_AUTOMATON</code> starts the state list. 
+ <li> <code>END_AUTOMATON</code> ends the state list. 
+ <li> <code>STATE(num)</code> starts state <code>num</code> description. 
+States must be numbered consecutively, starting from 0. 
+State 0 is the initial state. 
+ <li> <code>STATE_AWAIT(num,event)</code> awaits <code>event</code>. It is the counterpart
+of <code>ft_thread_await</code> for automata. Execution stays in this state
+until <code>event</code> is generated. 
+ <li> <code>STATE_AWAIT_N(num,event,n)</code> awaits <code>event</code> during at
+most <strong>n</strong> instant.  It is the counterpart of <code>ft_thread_await_n</code>.
+ <li> <code>STATE_GET_VALUE(num,event,n,result)</code> is used to get 
+the <code>n</code>th value generated with <code>event</code>.
+It is the counterpart of <code>ft_thread_get_value</code>. 
+ <li> <code>STATE_JOIN(num,thread)</code> is used to join <code>thread</code>. 
+It is the counterpart of <code>ft_thread_join</code>. 
+ <li> <code>STATE_JOIN_N(num,thread,n)</code> is an attempt to join <code>thread</code> during 
+at most <strong>n</strong> instants. It is the counterpart of <code>ft_thread_join_n</code>. 
+ <li> <code>STATE_STAY(num,n)</code> let the automaton stay for <code>n</code> instants in the state. 
+ <li> <code>STATE_SELECT(num,k,array,mask)</code> awaits elements
+of <code>array</code> which is an array of events of length <code>k</code>. It is the counterpart of <code>ft_thread_select</code> for
+automata. Execution stays in this state until at least one element of
+<code>array</code> is generated; the presence of events is recorded
+in <code>mask</code> which is an array of integers of length <code>k</code>. 
+ <li> <code>STATE_SELECT_N(num,k,array,mask,n)</code> awaits elements of <code>array</code> during at
+most <strong>n</strong> instant.  It is the counterpart of <code>ft_thread_select_n</code>.
+ <li> <code>GOTO(num)</code> blocks execution for the current instant 
+and sets the state to be executed at the next instant to be state <code>num</code>.
+ <li> <code>GOTO_NEXT</code> blocks execution for the current instant
+and sets the state for the next instant to be the next state. 
+ <li> <code>IMMEDIATE(num)</code> forces execution to jump to state <code>n</code> which is immediately (that is, during the same instant)
+executed. 
+ <li> <code>RETURN</code> forces immediate termination of the automaton. 
+ <li> <code>SELF</code> is the automaton. It is of type <strong>ft_thread_t</strong>. 
+ <li> <code>LOCAL</code> is the local data of the automaton. The local data is of type <code>void*</code>. 
+ <li> <code>SET_LOCAL(data)</code> sets the local data of the
+automaton.  
+ <li> <code>ARGS</code> is the argument that is passed at creation to
+the automaton. It is of type <code>void*</code>. 
+ <li> <code>RETURN_CODE</code> is the error code set by macros
+run by the automaton. As usual, 0 means success. 
+</ul>
+
+
+Note that there is no counterpart of <strong>ft_thread_link</strong> and <strong>ft_thread_unlink</strong> for automata,
+as an automaton always remains linked to the scheduler in which it was created.
+
+</p><br>
+
+</p><br>
+
+<!-- RETURN VALUES -->
+<a name="container1217">
+<h3><font color="#800020">
+RETURN VALUES</font>
+</h3><p>
+
+
+
+<p>
+
+On success, <strong>ft_automaton_create</strong> returns a new thread; <strong>NULL</strong> is returned otherwise.
+</p>
+
+
+When an error is encountered during execution of a macro, <strong>RETURN_CODE</strong> is set accordingly, 
+with one of the error values <strong>BADMEM</strong>, <strong>TIMEOUT</strong>, <strong>NEXT</strong>, <strong>BADLINK</strong>, or <strong>BADCREATE</strong>.
+
+</p><br>
+
+<!-- ERRORS -->
+<a name="container1218">
+<h3><font color="#800020">
+ERRORS</font>
+</h3><p>
+
+
+<dl>
+ <dt><strong>NULL</strong></dt>
+<dd>The automaton cannot be created, or the scheduler <strong>sched</strong>
+is not correctly created.</dd>
+</dl>
+
+
+</p><br>
+
+<!-- EXAMPLE -->
+<a name="container1219">
+<h3><font color="#800020">
+EXAMPLE</font>
+</h3><p>
+
+
+The following automaton switches control between two threads, according to the presence of an event.
+
+<font size="-1"><pre>DEFINE_AUTOMATON(switch_aut)
+{
+   void **args = ARGS;
+   
+   ft_event_t   event   = args[0]
+   ft_thread_t  thread1 = args[1]
+   ft_thread_t  thread2 = args[2]
+   
+  BEGIN_AUTOMATON
+     
+     STATE(0)
+     {
+        ft_scheduler_resume (thread1);
+     }
+     STATE_AWAIT (1,event)
+     {
+        ft_scheduler_suspend (thread1);
+        ft_scheduler_resume  (thread2);
+        GOTO(2);
+     }
+     STATE_AWAIT (2,event)
+     {
+        ft_scheduler_suspend (thread2);
+        ft_scheduler_resume  (thread1);
+        GOTO(1);
+     }
+     
+  END_AUTOMATON
+}
+</pre></font>
+
+</p><br>
+
+<!-- SEE ALSO -->
+<a name="container1220">
+<h3><font color="#800020">
+SEE ALSO</font>
+</h3><p>
+
+
+<strong>ft_thread_create</strong> (3),
+<strong>ft_thread_await</strong> (3),
+<strong>ft_thread_get_value</strong> (3),
+<strong>ft_thread_join</strong> (3).
+
+</p><br>
+</p><br>
+</td></tr></table>
+
+<hr width="100%">
+ <font size="-1">
+This page has been generated by <a href="http://www-sop.inria.fr/mimosa/fp/Scribe">Scribe</a>.
+<br>
+
+Last update <em>Tue Jun  4 10:09:20 2002</em></font>
+</html>
