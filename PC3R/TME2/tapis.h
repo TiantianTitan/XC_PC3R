@@ -49,9 +49,9 @@ int full(tapis* t)
 }
 
 
-paquet* popTapis(tapis* t, int* compt)
+paquet* popTapis(tapis* t)
 {
-	 while(empty(t) && compt > 0){
+	 while(empty(t)){
         ft_thread_await(*t->cv);
 		ft_thread_cooperate();
     }

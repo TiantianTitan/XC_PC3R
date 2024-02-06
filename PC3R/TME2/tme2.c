@@ -11,6 +11,7 @@
 #include <string.h>
 #include <pthread.h>
 #include "tapis.h"
+#include "thread.h"
 #include "./ft_v1.1"
 
 // n threads producteurs qui fabriquent des paquets et les enfilents sur le tapis de production
@@ -20,10 +21,9 @@
 // p threads messagers qui transportent des paquets du tapis de production au tapis de consommation
 #define NB_THREADS_MESSAGE 7
 #define SIZE_TAPIS  5
-#define NB_PRODUCTION 1
+#define CIBLE_PRODUCTION 1
 
 char * produits[5]={"pomme", "poire", "orange", "kiwi", "banane"};
-
 
 int main(){
 
@@ -53,26 +53,53 @@ int main(){
 
     ft_event_t finish = ft_event_create(scheduler_consommateur);
 
-    int compteur = NB_PRODUCTION * NB_THREADS_PRODUCTEUR;
+    int compteur = CIBLE_PRODUCTION * NB_THREADS_PRODUCTEUR;
 
     // Producteurs
-    int nb_prod =0;
-    while(nb_prod < NB_THREADS_PRODUCTEUR){
-        /* code */
+    int prod_id =0;
+    while(prod_id < NB_THREADS_PRODUCTEUR){
+        // Initialiasation
+        thread_prod * prod = malloc(sizeof(thread_prod));
+        prod->id = prod_id;
+        prod->nomProduit = produits[prod_id];
+        prod->nbProduction = 0;
+        prod->cibleProduction= CIBLE_PRODUCTION;
+        prod->tapis = &tapisProd;
+        prod->schedProd = &scheduler_producteur;
+        prod->journalProd = journalProd;
+        
+        ft_thread_create(scheduler_producteur,jobProd,NULL,(void*) prod);
+        prod_id++;
     }
 
 
     // Consommateurs
-    int nb_cons =0;
-    while (nb_cons < NB_THREADS_CONSOMMATEUR)
+    int cons_id =0;
+    while (cons_id < NB_THREADS_CONSOMMATEUR)
     {
-        /* code */
+        thread_cons* cons = malloc(sizeof(thread_cons));
+        cons->schedCons = & scheduler_consommateur;
+        cons->cpt = & compteur;
+        cons->id = cons_id;
+        cons->tapis = & tapisCons;
+        cons->fin = &finish;
+        cons->journalCons = journalCons;
+        ft_thread_create(scheduler_consommateur,jobCons,NULL,(void*) cons);
+        cons_id++;
     }
     
     // Messagers
-    int nb_mess =0;
-    while (nb_mess < NB_THREADS_MESSAGE){
-        /* code */
+    int mess_id =0;
+    while (mess_id < NB_THREADS_MESSAGE){
+        thread_mess * mess = malloc(sizeof(thread_mess));
+        mess->cpt = & compteur;
+        mess->id = mess_id;
+        mess->journalMes = journalMes;
+        mess->schedCons = & scheduler_consommateur;
+        mess->schedProd = & scheduler_producteur;
+        mess->tapisCons = & tapisCons;
+        mess->tapisProd = & tapisProd;
+        ft_thread_create(scheduler_messager,jobMes,NULL,(void*) mess); 
     }
 
     ft_event_t * fin;
