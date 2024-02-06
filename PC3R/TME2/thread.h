@@ -101,12 +101,12 @@ void jobMes(void * mes){
 
 	while((*(th_mess->cpt))>0){
 		ft_thread_link(*th_mess->schedProd);
-		paquet * p = defiler("messager ",th_mess->tapisProd);
+		paquet * p = popTapis(th_mess->tapisProd);
 		ft_thread_unlink();
 		fprintf (th_mess->journalMes, "JOURNAL DE VOYAGE:voyage par %d de %s\n", th_mess->id, p->nom);
 		printf("JOURNAL DE VOYAGE:voyage par %d de %s\n", th_mess->id, p->nom);
 		ft_thread_link(*th_mess->schedCons);
-		enfiler("messager", th_mess->tapisCons,p);
+		pushTapis(th_mess->tapisCons,p);
 		ft_thread_unlink();
 	}
 	ft_thread_link(sched);
