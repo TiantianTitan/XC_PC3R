@@ -11,7 +11,7 @@
 #define PAQUET_H_
 #include "outil.h"
 
-typedef struct
+typedef struct paquet
 {
 	char* nom;
 }paquet;

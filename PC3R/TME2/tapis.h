@@ -29,7 +29,7 @@ typedef struct
 
 void mktapis(size_t maxsize, tapis* t, ft_event_t* cv, char * str)
 {
-	t->tab = (paquet**)malloc( maxsize*sizeof( paquet ) );
+	t->tab = (paquet**)malloc( maxsize*sizeof( paquet* ) );
 	t->allocsize= maxsize;
 	t->index=0;
 	t->sz=0;

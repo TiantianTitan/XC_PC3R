@@ -34,7 +34,7 @@ int main(){
 
     ft_event_t cv_producteur = ft_event_create(scheduler_producteur);
     ft_event_t cv_consommateur = ft_event_create(scheduler_consommateur);
-    ft_event_t cv_messager = ft_event_create(scheduler_messager);
+    // ft_event_t cv_messager = ft_event_create(scheduler_messager);
 
     tapis tapisProd;
     tapis tapisCons;
