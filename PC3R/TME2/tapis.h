@@ -11,7 +11,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "paquet.h"
-#include "./ft_v1.1"
+#include "fthread.h"
 
 
 

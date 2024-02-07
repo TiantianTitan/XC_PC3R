@@ -12,7 +12,7 @@
 #include <pthread.h>
 #include "tapis.h"
 #include "thread.h"
-#include "./ft_v1.1"
+#include "fthread.h"
 
 // n threads producteurs qui fabriquent des paquets et les enfilents sur le tapis de production
 #define NB_THREADS_PRODUCTEUR 5
