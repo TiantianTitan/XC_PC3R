@@ -34,7 +34,8 @@ int main(){
 
     ft_event_t cv_producteur = ft_event_create(scheduler_producteur);
     ft_event_t cv_consommateur = ft_event_create(scheduler_consommateur);
-    // ft_event_t cv_messager = ft_event_create(scheduler_messager);
+    // ft_event_t cv_messager = ft_event_create(scheduler_messager); event是一个condition variable,message无需等待和启动，任何情况都可以直接调用
+    
 
     tapis tapisProd;
     tapis tapisCons;
@@ -57,11 +58,6 @@ int main(){
     return -1; // Ou gestion d'erreur appropriée
 }
 
-    pthread_mutex_t mut;
-    pthread_cond_t cv;
-
-    pthread_mutex_init(&mut,NULL);
-    pthread_cond_init(&cv,NULL);
 
     ft_event_t finish = ft_event_create(scheduler_consommateur);
 
@@ -123,6 +119,7 @@ int main(){
     ft_scheduler_start(scheduler_producteur);
     ft_scheduler_start(scheduler_consommateur);
     ft_scheduler_start(scheduler_messager);
+    
     pthread_join(ft_pthread(finThread),NULL);
 
     fclose(journalProd);

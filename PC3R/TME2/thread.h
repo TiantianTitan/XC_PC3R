@@ -12,7 +12,7 @@ typedef struct{
 
 void fin_routine(void * args){
 	theFinish * theFinish =args;
-  ft_thread_await(*theFinish->finish);
+    ft_thread_await(*theFinish->finish);
 }
 
 
