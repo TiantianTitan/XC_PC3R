@@ -6,16 +6,26 @@
 #include<string.h>
 #include<unistd.h>
 
-char * strConcat(const char * src1, const char * src2){
-    int totalLength = strlen(src1) + strlen(src2) + 1;
-    char * res = (char*) malloc(totalLength * sizeof(char));
-    if (res == NULL) {
-        printf("Allocation mémoire échouée\n");
-        return NULL; 
-    }
-    strcpy(res, src1);
-    strcat(res, src2);
-    return res;
+typedef struct{
+    ft_event_t* finish;
+}theFinish;
+
+void fin_routine(void * args){
+	theFinish * theFinish =args;
+  ft_thread_await(*theFinish->finish);
+}
+
+
+char * strConcat(char * src1, char * src2){
+	int lengthSrc1 = strlen(src1);
+	int lengthSrc2 = strlen(src2);
+	char * res = malloc ((lengthSrc1+lengthSrc2+1)*sizeof(char));
+	for (int j=0; j < lengthSrc1; j++)
+		res [j] = src1[j];
+	for (int j = 0; src2[j] != '\0'; ++j, ++lengthSrc1)
+		res [lengthSrc1] = src2[j];
+	res[lengthSrc1]='\0';
+	return res;
 }
 
 void reverse(char *s) {
@@ -90,8 +100,9 @@ void jobCons(void * cons){
         ft_thread_cooperate();
         free_paquet(p);
     }
+
+    ft_thread_generate(*(th_cons->fin));
     free(th_cons);
-    // ft_thread_generate(*(th_cons->fin));
 }
 
 void jobMes(void * mes){
@@ -104,7 +115,6 @@ void jobMes(void * mes){
 		paquet * p = popTapis(th_mess->tapisProd);
 		ft_thread_unlink();
 		fprintf (th_mess->journalMes, "JOURNAL DE VOYAGE:voyage par %d de %s\n", th_mess->id, p->nom);
-		printf("JOURNAL DE VOYAGE:voyage par %d de %s\n", th_mess->id, p->nom);
 		ft_thread_link(*th_mess->schedCons);
 		pushTapis(th_mess->tapisCons,p);
 		ft_thread_unlink();

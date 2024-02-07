@@ -27,7 +27,7 @@ typedef struct
 
 }tapis;
 
-void mktapis(size_t maxsize, tapis* t, ft_event_t* cv, char * str)
+void mktapis(size_t maxsize, tapis* t, ft_event_t *cv)
 {
 	t->tab = (paquet**)malloc( maxsize*sizeof( paquet* ) );
 	t->allocsize= maxsize;

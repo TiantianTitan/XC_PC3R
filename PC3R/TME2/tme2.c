@@ -38,12 +38,24 @@ int main(){
 
     tapis tapisProd;
     tapis tapisCons;
-    mktapis(SIZE_TAPIS,&tapisProd,&cv_producteur,"prod");
-    mktapis(SIZE_TAPIS,&tapisCons,&cv_consommateur,"cons");
+    mktapis(SIZE_TAPIS,&tapisProd,&cv_producteur);
+    mktapis(SIZE_TAPIS,&tapisCons,&cv_consommateur);
     
     FILE * journalProd = fopen("journal_production.txt","w");
+    if (!journalProd) {
+        perror("Erreur lors de l'ouverture de journal_production.txt");
+        return -1; // Ou gestion d'erreur appropriée
+    }
     FILE * journalCons = fopen("journal_consommation.txt","w");
+    if (!journalCons) {
+    perror("Erreur lors de l'ouverture de journal_Consommation.txt");
+    return -1; // Ou gestion d'erreur appropriée
+}
     FILE * journalMes = fopen("journal_messager.txt","w");
+    if (!journalMes) {
+    perror("Erreur lors de l'ouverture de journal_Messager.txt");
+    return -1; // Ou gestion d'erreur appropriée
+}
 
     pthread_mutex_t mut;
     pthread_cond_t cv;
@@ -100,11 +112,13 @@ int main(){
         mess->tapisCons = & tapisCons;
         mess->tapisProd = & tapisProd;
         ft_thread_create(scheduler_messager,jobMes,NULL,(void*) mess); 
+        mess_id++;
     }
 
-    ft_event_t * fin;
-    fin = &finish;
-    ft_thread_t finThread = ft_thread_create(scheduler_consommateur,NULL,NULL,(void * ) fin);
+    theFinish* args = malloc(sizeof(theFinish));
+    args->finish = &finish;
+
+    ft_thread_t finThread = ft_thread_create(scheduler_consommateur,fin_routine,NULL,(void * ) args);
 
     ft_scheduler_start(scheduler_producteur);
     ft_scheduler_start(scheduler_consommateur);
@@ -115,13 +129,7 @@ int main(){
     fclose(journalCons);
     fclose(journalMes);
 
-
     return 0;
-
-
-
-
-
 
 }
 
