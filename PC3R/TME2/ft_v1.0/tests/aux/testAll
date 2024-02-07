@@ -1,5 +1,0 @@
-for prog in *.c
-do
-    aux/testOne `basename $prog .c`
-done
-
