@@ -1,3 +1,12 @@
+/**
+* <code> tapis.h </code> 
+* @author Haotian XUE  & HeJun CAO 
+* @date 31 janv. 2024
+* @Description
+*
+*/
+
+
 #ifndef OUTIL_H_
 #define OUTIL_H_
 

@@ -1,3 +1,12 @@
+/**
+* <code> tapis.h </code> 
+* @author Haotian XUE  & HeJun CAO 
+* @date 5 fév. 2024
+* @Description
+*
+*/
+
+
 #ifndef THREADS_H
 #define THREADS_H
 #include "tapis.h"
