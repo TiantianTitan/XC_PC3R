@@ -1,0 +1,5 @@
+package lecteur
+
+func lecteur() {
+
+}
