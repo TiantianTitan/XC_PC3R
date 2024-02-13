@@ -1,5 +1,0 @@
-package reducteur
-
-func reducteur() {
-
-}

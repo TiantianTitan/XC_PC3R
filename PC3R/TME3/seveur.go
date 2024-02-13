@@ -1,5 +1,0 @@
-package serveur
-
-func serveur() {
-
-}

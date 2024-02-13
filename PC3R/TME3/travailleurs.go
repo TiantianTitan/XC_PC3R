@@ -1,5 +1,0 @@
-package travailleurs
-
-func travailleurs() {
-
-}

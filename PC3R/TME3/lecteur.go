@@ -1,5 +1,0 @@
-package lecteur
-
-func lecteur() {
-
-}
