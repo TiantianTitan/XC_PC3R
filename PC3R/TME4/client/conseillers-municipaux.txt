@@ -1,0 +1,9 @@
+Titre du rapport
+Code du département (Maire)	Libellé de département (Maires)	Code Insee de la commune	Libellé de la commune	Nom de l'élu	Prénom de l'élu	Code sexe	Date de naissance	Code profession	Libellé de la profession	Date de début du mandat	Libellé de fonction	Date de début de la fonction	Nationalité de l'élu
+01	AIN	001	L'Abergement-Clémenciat	BERAUD	Zélie	F	26/3/1980	110	Artisans (obsolète)	23/3/2014			Française
+01	AIN	001	L'Abergement-Clémenciat	BOUILLOUX	Delphine	F	2/8/1977	102	Salariés agricoles (obsolète)	23/3/2014			Française
+01	AIN	001	L'Abergement-Clémenciat	BOULON	Daniel	M	4/3/1951	161	Retraités salariés privés (obsolète)	23/3/2014	Maire	23/3/2014	Française
+01	AIN	001	L'Abergement-Clémenciat	BUET	Roger	M	21/4/1952	101	Agriculteurs propriétaires exploit. (obsolète)	23/3/2014	Troisième adjoint au maire	23/3/2014	Française
+01	AIN	001	L'Abergement-Clémenciat	DESVAQUET	Nadine	F	22/8/1961	114	Agents technique et techniciens (obsolète)	23/3/2014			Française
+01	AIN	001	L'Abergement-Clémenciat	DUBOST	Daniel	M	10/10/1951	161	Retraités salariés privés (obsolète)	23/3/2014			Française
+01	AIN	001	L'Abergement-Clémenciat	EVALET-TAPONAT	Line	F	22/7/1967	150	Cadres sup. (entreprises publiques) (obsolète)	23/3/2014			Française
