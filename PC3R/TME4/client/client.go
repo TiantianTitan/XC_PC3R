@@ -9,7 +9,7 @@ import (
 	"time"
 
 	st "./structures" // contient la structure Personne
-	tr "./travaux" // contient les fonctions de travail sur les Personnes
+	tr "./travaux"    // contient les fonctions de travail sur les Personnes
 )
 
 var ADRESSE string = "localhost"                           // adresse de base pour la Partie 2
@@ -23,9 +23,19 @@ var NB_PD int = 2                                          // nombre de producte
 
 var pers_vide = st.Personne{Nom: "", Prenom: "", Age: 0, Sexe: "M"} // une personne vide
 
+type message_lec struct { //需要一个接口类型来提供文件内的数据
+	contenu int
+	retour  chan string
+}
+
 // paquet de personne, sur lequel on peut travailler, implemente l'interface personne_int
 type personne_emp struct {
 	// A FAIRE
+	ligne       int                             //根据要求，显示这是文件里数据的第几行
+	statut      string                          //根据题目里的要求，将paquet的状态转换成R
+	st.Personne                                 //根据题目要求，得有个人
+	aFaire      []func(st.Personne) st.Personne //tableau afaire vide de fonctions des personnes dans les personnes
+	lecture     chan message_lec                //接收数据
 }
 
 // paquet de personne distante, pour la Partie 2, implemente l'interface personne_int
@@ -57,10 +67,26 @@ func personne_de_ligne(l string) st.Personne {
 
 func (p *personne_emp) initialise() {
 	// A FAIRE
+	ret := make(chan string)
+	p.lecture <- message_lec{contenu: p.ligne, retour: ret}
+	ligne := <-ret
+
+	p.Personne = personne_de_ligne(ligne)
+	for i := 0; i < rand.Intn(6)+1; i++ {
+		p.aFaire = append(p.aFaire, tr.UnTravail())
+	}
+
+	p.statut = "R"
 }
 
 func (p *personne_emp) travaille() {
 	// A FAIRE
+	p.Personne = p.aFaire[0](p.Personne) //调用aFaire里的第0个fun，将结果返回给Personne
+	p.aFaire = p.aFaire[1:]              //从下标1开始往后的部分
+	if len(p.aFaire) == 0 {
+		p.statut = "C"
+	}
+
 }
 
 func (p *personne_emp) vers_string() string {
