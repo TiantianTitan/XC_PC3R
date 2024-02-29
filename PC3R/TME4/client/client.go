@@ -37,7 +37,7 @@ type personne_emp struct {
 	statut      string                          //根据题目里的要求，将paquet的状态转换成R
 	st.Personne                                 //根据题目要求，得有个人
 	aFaire      []func(st.Personne) st.Personne //这里的意思是，一个存储函数的表格，函数的参数类型是Persone，返回也是Persone，实际上类似于C++里的私有函数，Personne.add之类的
-	lectureChan chan message                    //接收数据
+	lectureChan chan message                    //发送数据用
 }
 
 // paquet de personne distante, pour la Partie 2, implemente l'interface personne_int
@@ -56,12 +56,12 @@ type personne_int interface {
 // fabrique une personne à partir d'une ligne du fichier des conseillers municipaux
 // à changer si un autre fichier est utilisé
 func personne_de_ligne(l string) st.Personne {
-	separateur := regexp.MustCompile("\u0009")         //这个表格是用Tab作为分割的，对应的是\u009
-	separation := separateur.Split(l, -1)              //将第l行的数据以Tab为分割，全部返回，存储到separation里
-	naiss, _ := time.Parse("29/2/2024", separation[7]) //用29/2/2024这个时间格式读取时间，时间数据存储在[7]里
-	a1, _, _ := time.Now().Date()                      //获取当前时间
-	a2, _, _ := naiss.Date()                           //获取表格存储的时间
-	agec := a1 - a2                                    //女人永远18岁！
+	separateur := regexp.MustCompile("\u0009")        //这个表格是用Tab作为分割的，对应的是\u009
+	separation := separateur.Split(l, -1)             //将第l行的数据以Tab为分割，全部返回，存储到separation里
+	naiss, _ := time.Parse("2/1/2006", separation[7]) //用29/2/2024这个时间格式读取时间，时间数据存储在[7]里
+	a1, _, _ := time.Now().Date()                     //获取当前时间
+	a2, _, _ := naiss.Date()                          //获取表格存储的时间
+	agec := a1 - a2                                   //女人永远18岁！
 	return st.Personne{Nom: separation[4], Prenom: separation[5], Sexe: separation[6], Age: agec}
 }
 
@@ -70,7 +70,7 @@ func personne_de_ligne(l string) st.Personne {
 func (p *personne_emp) initialise() {
 	// A FAIRE
 	ret := make(chan string)
-	p.lectureChan <- message{ligne: p.ligne, retourChan: ret} //从文本中检索第ligne行
+	p.lectureChan <- message{ligne: p.ligne, retourChan: ret} //将这个人是第几行，使用的哪个Chan进行标注
 	ligne := <-ret                                            //提取数据
 	p.Personne = personne_de_ligne(ligne)                     //转换成Personne
 	for i := 0; i < rand.Intn(6)+1; i++ {                     //添加随机任务
@@ -136,29 +136,25 @@ func (p personne_dist) donne_statut() string {
 // Partie 1 : contacté par la méthode initialise() de personne_emp, récupère une ligne donnée dans le fichier source
 func lecteur(lectureChan chan message) {
 	for {
-		m := <-lectureChan
-		file, err := os.Open(FICHIER_SOURCE)
+		m := <-lectureChan                   //m首先接收lectureChan里的内容，接收到之后才会有下一步
+		file, err := os.Open(FICHIER_SOURCE) //打开文件，打不开就报错找不到
 		if err != nil {
 			fmt.Println("Can not find the ficher ! \n")
 		}
-		scanner := bufio.NewScanner(file)
-		//sauter la première ligne
-		_ = scanner.Scan()
-		//sauter les premières m.ligne-ième lignes
-		for i := 0; i < m.ligne; i++ {
+		scanner := bufio.NewScanner(file) //逐行读取文件内容
+		_ = scanner.Scan()                //跳过第一行
+		for i := 0; i < m.ligne; i++ {    //然后继续跳过，直到到达第m.ligne行
 			_ = scanner.Scan()
 		}
-		result := scanner.Scan()
-		if result == false {
+		result := scanner.Scan() //读取内容
+		if result == false {     //检查读取是否失败
 			if scanner.Err() != nil {
-				// 如果扫描过程中发生错误，则报告扫描错误
-				log.Fatal(scanner.Err())
+				log.Fatal(scanner.Err()) // 如果扫描过程中发生错误，则报告扫描错误
 			} else {
-				// 如果没有错误，但是没有更多的行可以读取，可能是因为指定的行号超出了文件范围
-				log.Fatal("No more lines to read or line number exceeds file size")
+				log.Fatal("No more lines to read or line number exceeds file size") // 如果没有错误，但是没有更多的行可以读取，可能是因为指定的行号超出了文件范围
 			}
 		} else {
-			m.retourChan <- scanner.Text()
+			m.retourChan <- scanner.Text() //将数据发送到m.retourChan里
 		}
 		_ = file.Close()
 	}
@@ -171,15 +167,15 @@ func lecteur(lectureChan chan message) {
 func ouvrier(deGest chan personne_int, versGest chan personne_int, versCollec chan personne_int) {
 	// A FAIRE
 	for {
-		personne := <-deGest
-		if personne.donne_statut() == "V" {
-			personne.initialise()
-			versGest <- personne
-		} else if personne.donne_statut() == "R" {
-			personne.travaille()
-			versGest <- personne
+		personne := <-deGest                //如果接收到personne_int类型的数据
+		if personne.donne_statut() == "V" { //如果没活儿干
+			personne.initialise() //分配任务
+			versGest <- personne  //将新的牛马信息发给Gestionaire
+		} else if personne.donne_statut() == "R" { //如果活儿没干完
+			personne.travaille() //督促牛马赶紧干活儿
+			versGest <- personne //让牛马继续接收天龙人的监督
 		} else {
-			versCollec <- personne
+			versCollec <- personne //干完了就该被收起来当废品卖了（优化员工，向社会输送人才）
 		}
 	}
 }
@@ -190,8 +186,14 @@ func ouvrier(deGest chan personne_int, versGest chan personne_int, versCollec ch
 func producteur(lectureChan chan message, prodChan chan personne_int) {
 	// A FAIRE
 	for {
-		personne := personne_emp{ligne: rand.Intn(TAILLE_SOURCE), Personne: pers_vide, aFaire: make([]func(st.Personne) st.Personne, 0), statut: "V", lectureChan: lectureChan}
-		prodChan <- personne_int(&personne)
+		personne := personne_emp{ //不停的创建新的牛马，为社会提供稳定GDP
+			ligne:       rand.Intn(TAILLE_SOURCE),
+			Personne:    pers_vide,
+			aFaire:      make([]func(st.Personne) st.Personne, 0),
+			statut:      "V",
+			lectureChan: lectureChan,
+		}
+		prodChan <- personne_int(&personne) //将新的牛马写入prodChan
 	}
 }
 
@@ -209,37 +211,36 @@ func producteur(lectureChan chan message, prodChan chan personne_int) {
 // plus rendre les paquets surlesquels ils travaillent pour en prendre des autres
 func gestionnaire(deProd chan personne_int, versOuvrier chan personne_int, deOuvrier chan personne_int) {
 	// A FAIRE
-	queue := make([]personne_int, 0)
+	queue := make([]personne_int, 0) //牛马哪怕入圈也得排队呐，队伍初始化为0个牛马
 	for {
-		if len(queue) == TAILLE_G {
+		if len(queue) == TAILLE_G { //对不起，想做牛马的太多了，你往后稍稍
 			//full
-			versOuvrier <- queue[0]
-			queue = queue[1:]
-		} else if len(queue) == 0 {
+			versOuvrier <- queue[0] //TMD牛马怎么这么多？排第一的那个谁，滚去焚化炉里分解！
+			queue = queue[1:]       //人都走了还想占着房？一起烧了，给下一个牛马腾腾位置！
+		} else if len(queue) == 0 { //哎哟这位爷里面请，咱们现在正缺牛马，啊不是，高端人才呢
 			//vide
 			select {
-			case personne := <-deProd:
+			case personne := <-deProd: //哎哟？大学里新出来的崭新牛马？来来来叔叔给你安排岗位
 				queue = append(queue, personne)
-			case personne := <-deOuvrier:
-				queue = append(queue, personne)
+			case personne := <-deOuvrier: //晦气，怎么是个干完活儿的老油条，速去焚化炉！
+				queue = append(queue, personne) //实际上没有区别，加到queue里就是等死
 			}
-		} else if len(queue) < TAILLE_G-1 {
+		} else if len(queue) < TAILLE_G-1 { //还有起码两个位置，你不干有的是牛马干！3000月薪速速来人！
 			//2 places pour paquet de ouvrier
 			select {
 			case personne := <-deProd:
 				queue = append(queue, personne)
 			case personne := <-deOuvrier:
 				queue = append(queue, personne)
-			case versOuvrier <- queue[0]:
-				queue = queue[1:]
+			case versOuvrier <- queue[0]: //试试看能不能把老牛马优化出去
+				queue = queue[1:] //哟？赶走了？赶紧的下一位！
 			}
-		} else {
-			//pas assez de places pour paquet de producteur
+		} else { //只有一个位置了啊！不是QS前五十的牛马咱们看都不看啊！
 			select {
-			case personne := <-deOuvrier:
+			case personne := <-deOuvrier: //牛马太多了，嘴上说要，大学的崭新牛马给个面试就很好了，爬！
 				queue = append(queue, personne)
-			case versOuvrier <- queue[0]:
-				queue = queue[1:]
+			case versOuvrier <- queue[0]: //老牛马怎么还不死！没位置履行我们公司的社会职责了！
+				queue = queue[1:] //总算死了，有位置咯~
 			}
 		}
 	}
@@ -252,28 +253,34 @@ func collecteur(versCollecteur chan personne_int, mainChan chan int) {
 	var journal string
 	for {
 		select {
-		case personne := <-versCollecteur:
-			journal += personne.vers_string() + "\n"
-		case <-mainChan:
-			fmt.Println("Journal:\n" + journal)
+		case personne := <-versCollecteur: //如果接收到别人发来的牛马
+			journal += personne.vers_string() + "\n" //添加到输出
+		case <-mainChan: //尝试发送给main
+			fmt.Println("Journal:\n" + journal) //输出
 			mainChan <- 0
 			return
 		}
 	}
 }
 
+/*
+lecture函数负责接收lectureChan里的数据，并且将数据发送回message.retourChan
+ouvrier函数负责接收deGest里的数据，并且将数据发送给verGest和verCollec
+producteur函数负责向prodChan发送数据，并且将新创建的Personne的lectureChan和主体进行连接
+gestionnaire函数负责接收deProd和deProd里的数据，并且将数据发送给versOuvrir
+
+*/
+
 func main() {
 	rand.Seed(time.Now().UTC().UnixNano()) // graine pour l'aleatoire
-	/*if len(os.Args) < 3 {
+	if len(os.Args) < 3 {
 		fmt.Println("Format: client <port> <millisecondes d'attente>")
 		return
-	}*/
+	}
 	//port, _ := strconv.Atoi(os.Args[1])   // utile pour la partie 2
 	millis, _ := strconv.Atoi(os.Args[2]) // duree du timeout
 	fintemps := make(chan int)
-	// A FAIRE
-	// creer les canaux
-	// lancer les goroutines (parties 1 et 2): 1 lecteur, 1 collecteur, des producteurs, des gestionnaires, des ouvriers
+
 	// creer les canaux
 	lectureChan := make(chan message)
 	deProdVersGest := make(chan personne_int)
@@ -281,22 +288,36 @@ func main() {
 	deOuvrierVersGest := make(chan personne_int)
 	deOuvrierVersCollec := make(chan personne_int)
 	// lancer les goroutines (parties 1 et 2): 1 lecteur, 1 collecteur, des producteurs, des gestionnaires, des ouvriers
+
+	//开局lecture是会被阻塞的，因为lectureChan是空的
+	//直到producteur启动之后，接收到lectureChan里的数据，开始读取并且返回到retourChan里
+	//激活initialise函数，创建人的实体
 	go func() {
 		lecteur(lectureChan)
 	}()
+
+	//同理，一样被阻塞
+	//最后，接收到牛马的焚化炉对牛马进行摧毁（输出）
 	go func() {
 		collecteur(deOuvrierVersCollec, fintemps)
 	}()
+
+	//到了这里，整个函数才开始启动，producteur创新新人，给lectureChan和deProdVersGest都发送了数据
+	//initialise激活之后才能够将数据发送到deProdVersGest里
 	for i := 0; i < NB_P; i++ {
 		go func() {
 			producteur(lectureChan, deProdVersGest)
 		}()
 	}
+
+	//接下来，接收到deProdVersGest的数据之后，将数据加入queue里，并且尝试将原有的数据发送到deGestVersOuvrier里
 	for i := 0; i < NB_G; i++ {
 		go func() {
 			gestionnaire(deProdVersGest, deGestVersOuvrier, deOuvrierVersGest)
 		}()
 	}
+
+	//接下来，被deGestVersOuvrier里的数据激活之后，根据状态选择发回gest还是直接发给collecteur
 	for i := 0; i < NB_O; i++ {
 		go func() {
 			ouvrier(deGestVersOuvrier, deOuvrierVersGest, deOuvrierVersCollec)
