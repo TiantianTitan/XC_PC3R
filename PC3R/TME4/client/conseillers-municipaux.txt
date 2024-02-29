@@ -1,9 +1,9 @@
 Titre du rapport
-Code du département (Maire)	Libellé de département (Maires)	Code Insee de la commune	Libellé de la commune	Nom de l'élu	Prénom de l'élu	Code sexe	Date de naissance	Code profession	Libellé de la profession	Date de début du mandat	Libellé de fonction	Date de début de la fonction	Nationalité de l'élu
-01	AIN	001	L'Abergement-Clémenciat	BERAUD	Zélie	F	26/3/1980	110	Artisans (obsolète)	23/3/2014			Française
-01	AIN	001	L'Abergement-Clémenciat	BOUILLOUX	Delphine	F	2/8/1977	102	Salariés agricoles (obsolète)	23/3/2014			Française
-01	AIN	001	L'Abergement-Clémenciat	BOULON	Daniel	M	4/3/1951	161	Retraités salariés privés (obsolète)	23/3/2014	Maire	23/3/2014	Française
-01	AIN	001	L'Abergement-Clémenciat	BUET	Roger	M	21/4/1952	101	Agriculteurs propriétaires exploit. (obsolète)	23/3/2014	Troisième adjoint au maire	23/3/2014	Française
-01	AIN	001	L'Abergement-Clémenciat	DESVAQUET	Nadine	F	22/8/1961	114	Agents technique et techniciens (obsolète)	23/3/2014			Française
-01	AIN	001	L'Abergement-Clémenciat	DUBOST	Daniel	M	10/10/1951	161	Retraités salariés privés (obsolète)	23/3/2014			Française
-01	AIN	001	L'Abergement-Clémenciat	EVALET-TAPONAT	Line	F	22/7/1967	150	Cadres sup. (entreprises publiques) (obsolète)	23/3/2014			Française
+Code du departement (Maire)	Libelle de departement (Maires)	Code Insee de la commune	Libelle de la commune	Nom de l'elu	Prenom de l'elu	Code sexe	Date de naissance	Code profession	Libelle de la profession	Date de debut du mandat	Libelle de fonction	Date de debut de la fonction	Nationalite de l'elu
+01	AIN	001	L'Abergement-Clemenciat	BERAUD	Zelie	F	26/3/1980	110	Artisans (obsolete)	23/3/2014			Francaise
+01	AIN	001	L'Abergement-Clemenciat	BOUILLOUX	Delphine	F	2/8/1977	102	Salaries agricoles (obsolete)	23/3/2014			Francaise
+01	AIN	001	L'Abergement-Clemenciat	BOULON	Daniel	M	4/3/1951	161	Retraites salaries prives (obsolete)	23/3/2014	Maire	23/3/2014	Francaise
+01	AIN	001	L'Abergement-Clemenciat	BUET	Roger	M	21/4/1952	101	Agriculteurs proprietaires exploit. (obsolete)	23/3/2014	Troisieme adjoint au maire	23/3/2014	Francaise
+01	AIN	001	L'Abergement-Clemenciat	DESVAQUET	Nadine	F	22/8/1961	114	Agents technique et techniciens (obsolete)	23/3/2014			Francaise
+01	AIN	001	L'Abergement-Clemenciat	DUBOST	Daniel	M	10/10/1951	161	Retraites salaries prives (obsolete)	23/3/2014			Francaise
+01	AIN	001	L'Abergement-Clemenciat	EVALET-TAPONAT	Line	F	22/7/1967	150	Cadres sup. (entreprises publiques) (obsolete)	23/3/2014			Francaise
