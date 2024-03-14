@@ -1,9 +1,13 @@
+# 0 "feu_tricolore.pml"
+# 0 "<built-in>"
+# 0 "<command-line>"
+# 1 "/usr/include/stdc-predef.h" 1 3 4
+# 0 "<command-line>" 2
+# 1 "feu_tricolore.pml"
 
-// // Pour obtenir un bon schéma
-// // spin -a .pml
-// // gcc -o pan pan.c
-// //./pan -D| dot -Tps | ps2pdf - pan.pdf
-// // evince pan.pdf
+
+
+
 
 
 mtype {ROUGE, ORANGE, VERT, INDETERMINEE};
@@ -15,10 +19,10 @@ active proctype feu(){
     bool clignotant = false
     mtype couleur = INDETERMINEE
 
-    initial:    
+    initial:
         couleur = ORANGE;
         clignotant = true;
-    
+
     if
     :: true -> clignotant = false; goto gored;
     :: true -> goto initial;
@@ -31,7 +35,7 @@ active proctype feu(){
     }
     if
     :: true -> goto gogreen;
-    :: true -> goto gored;  
+    :: true -> goto gored;
     :: true -> goto fault;
     fi
 
@@ -65,8 +69,8 @@ active proctype feu(){
         observe ! couleur, clignotant
     }
     if
-    :: true -> goto fault  
-    fi 
+    :: true -> goto fault
+    fi
 
 
 }
@@ -87,17 +91,17 @@ active proctype observateur(){
                     assert(clignote == true || precedent != ROUGE);
                     printf("Observateur: ORANGE\n")
                     precedent = ORANGE
-            } 
+            }
             :: atomic{couleur == VERT ->
                     assert(clignote == true || precedent != ORANGE);
                     printf("Observateur: VERT\n")
                     precedent = VERT
-            } 
-            :: atomic{couleur == ROUGE -> 
+            }
+            :: atomic{couleur == ROUGE ->
                         assert(clignote == true || precedent != VERT);
                         printf("Observateur: ROUGE\n")
                         precedent = ROUGE
-            } 
+            }
             :: atomic{clignote == true -> assert(couleur == ORANGE)}
         fi
     od
