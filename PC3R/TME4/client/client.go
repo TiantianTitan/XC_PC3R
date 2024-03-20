@@ -5,9 +5,11 @@ import (
 	"fmt"
 	"log"
 	"math/rand"
+	"net"
 	"os"
 	"regexp"
 	"strconv"
+	"strings"
 	"time"
 
 	st "./structures" // contient la structure Personne
@@ -40,9 +42,16 @@ type personne_emp struct {
 	lectureChan chan message                    //发送数据用
 }
 
+type message_proxy struct {
+	identifiant int
+	retourChan  chan string // socket TCP
+	methode     string
+}
+
 // paquet de personne distante, pour la Partie 2, implemente l'interface personne_int
 type personne_dist struct {
-	// A FAIRE
+	identifiant int
+	proxy       chan message_proxy
 }
 
 // interface des personnes manipulees par les ouvriers, les
@@ -106,32 +115,53 @@ func (p *personne_emp) donne_statut() string {
 // *** METHODES DE L'INTERFACE personne_int POUR LES PAQUETS DE PERSONNES DISTANTES (PARTIE 2) ***
 // ces méthodes doivent appeler le proxy (aucun calcul direct)
 
-/*
 func (p personne_dist) initialise() {
-	// A FAIRE
+	retour := make(chan string)
+	message := message_proxy{identifiant: p.identifiant, methode: "initialise", retourChan: retour}
+	p.proxy <- message
+	<-retour
 }
 
 func (p personne_dist) travaille() {
-	// A FAIRE
+	retour := make(chan string)
+	message := message_proxy{identifiant: p.identifiant, methode: "travaille", retourChan: retour}
+	p.proxy <- message
+	<-retour
 }
 
 func (p personne_dist) vers_string() string {
-	// A FAIRE
+	retour := make(chan string)
+	message := message_proxy{identifiant: p.identifiant, methode: "vers_string", retourChan: retour}
+	p.proxy <- message
+	return <-retour
 }
 
 func (p personne_dist) donne_statut() string {
-	// A FAIRE
+	retour := make(chan string)
+	message := message_proxy{identifiant: p.identifiant, methode: "donne_statut", retourChan: retour}
+	p.proxy <- message
+	return <-retour
 }
-*/
 
 // *** CODE DES GOROUTINES DU SYSTEME ***
 
 // Partie 2: contacté par les méthodes de personne_dist, le proxy appelle la méthode à travers le réseau et récupère le résultat
 // il doit utiliser une connection TCP sur le port donné en ligne de commande
 
-//func proxy() {
-// A FAIRE
-//}
+func proxy(port string, requeteChan chan message_proxy) {
+	address := ADRESSE + ":" + port
+	conn, _ := net.Dial("tcp", address)
+	for {
+		message := <-requeteChan
+		requete := strconv.Itoa(message.identifiant) + "," + message.methode + "\n"
+		fmt.Fprintf(conn, fmt.Sprintf(requete))
+		recu, _ := bufio.NewReader(conn).ReadString('\n')
+		reponse := strings.TrimSuffix(recu, "\n")
+		fmt.Println("Réponse reçu du serveur: " + reponse)
+		message.retourChan <- reponse
+	}
+	conn.Close()
+}
 
 // Partie 1 : contacté par la méthode initialise() de personne_emp, récupère une ligne donnée dans le fichier source
 func lecteur(lectureChan chan message) {
@@ -201,9 +231,16 @@ func producteur(lectureChan chan message, prodChan chan personne_int) {
 // utilisé pour retrouver l'object sur le serveur
 // la creation sur le client d'une personne_dist doit declencher la creation sur le serveur d'une "vraie" personne, initialement vide, de statut V
 
-//func producteur_distant() {
-// A FAIRE
-//}
+func producteur_distant(deProdVersGest chan personne_int, requeteChan chan message_proxy, id_frais_chan chan int) {
+	for {
+		id := <-id_frais_chan
+		new_pers := personne_dist{identifiant: id, proxy: requeteChan}
+		retour := make(chan string)
+		requeteChan <- message_proxy{identifiant: id, methode: "creer", retourChan: retour}
+		<-retour
+		deProdVersGest <- new_pers
+	}
+}
 
 // Partie 1: les gestionnaires recoivent des personne_int des producteurs et des ouvriers et maintiennent chacun une file de personne_int
 // ils les passent aux ouvriers quand ils sont disponibles
@@ -277,7 +314,9 @@ func main() {
 		fmt.Println("Format: client <port> <millisecondes d'attente>")
 		return
 	}
-	//port, _ := strconv.Atoi(os.Args[1])   // utile pour la partie 2
+
+	port, _ := strconv.Atoi(os.Args[1]) // utile pour la partie 2
+
 	millis, _ := strconv.Atoi(os.Args[2]) // duree du timeout
 	fintemps := make(chan int)
 
@@ -287,6 +326,12 @@ func main() {
 	deGestVersOuvrier := make(chan personne_int)
 	deOuvrierVersGest := make(chan personne_int)
 	deOuvrierVersCollec := make(chan personne_int)
+
+	// Partie 2: un proxy entre personne_dist et fonction proxy()
+	// et un generator d'uniques identifiants (fabriquer identifiant dans un goroutine puis envoyer cet identifiant vers un canal)
+	requeteChan := make(chan message_proxy)
+	id_frais_chan := make(chan int)
+
 	// lancer les goroutines (parties 1 et 2): 1 lecteur, 1 collecteur, des producteurs, des gestionnaires, des ouvriers
 
 	//开局lecture是会被阻塞的，因为lectureChan是空的
@@ -324,7 +369,22 @@ func main() {
 		}()
 	}
 
-	// lancer les goroutines (partie 2): des producteurs distants, un proxy
+	// lancer les goroutines (partie 2): des producteurs distants, un generator d'identifiant, un proxy
+	go func() {
+		proxy(strconv.Itoa(port), requeteChan)
+	}()
+	go func() {
+		compteur := 0
+		for {
+			id_frais_chan <- compteur
+			compteur++
+		}
+	}()
+	for i := 0; i < NB_PD; i++ {
+		go func() {
+			producteur_distant(deProdVersGest, requeteChan, id_frais_chan)
+		}()
+	}
 
 	time.Sleep(time.Duration(millis) * time.Millisecond)
 	fintemps <- 0
