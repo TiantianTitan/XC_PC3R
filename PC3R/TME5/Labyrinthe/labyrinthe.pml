@@ -1,3 +1,9 @@
+// // Pour obtenir un bon schéma
+// // spin -a .pml
+// // gcc -o pan pan.c
+// //./pan -D| dot -Tps | ps2pdf - pan.pdf
+// // evince pan.pdf
+
 active proctype labyrinthe (){
 
 // Par rapport au schéma fournit du TME5, on implémente ce ficher.
