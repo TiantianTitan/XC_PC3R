@@ -28,26 +28,26 @@ type personne_serv struct {
 
 // 创建一个Personne对象，Prod生成的时候，客户端进行调用
 func creer(id int) *personne_serv {
-	pers := pers_vide
-	tableau_afaire := make([]func(st.Personne) st.Personne, 0)
-	new_pers_serv := personne_serv{statut: "V", afaire: tableau_afaire, Personne: pers}
-	id_serv[id] = &new_pers_serv
-	return &new_pers_serv
+	pers := pers_vide                                                                   // 使用全局定义的空Personne对象作为新创建的personne_serv的模板。
+	tableau_afaire := make([]func(st.Personne) st.Personne, 0)                          // 初始化一个空的工作列表。
+	new_pers_serv := personne_serv{statut: "V", afaire: tableau_afaire, Personne: pers} // 创建一个新的personne_serv实例，状态设置为"V"。
+	id_serv[id] = &new_pers_serv                                                        // 将新创建的实例与其ID关联并存储在全局map中。
+	return &new_pers_serv                                                               // 返回新创建的实例的指针。
 }
 
 func (p *personne_serv) initialise() {
-	p.Personne = st.Personne{Prenom: "StarPlatinum", Nom: "TheWorld", Sexe: "M", Age: 18}
-	for i := 0; i <= rand.Intn(6); i++ {
-		p.afaire = append(p.afaire, tr.UnTravail())
+	p.Personne = st.Personne{Prenom: "StarPlatinum", Nom: "TheWorld", Sexe: "M", Age: 18} // 使用预定义的值初始化Personne字段。
+	for i := 0; i <= rand.Intn(6); i++ {                                                  // 生成0到6之间的随机数，确定要添加的工作数量。
+		p.afaire = append(p.afaire, tr.UnTravail()) // 随机添加工作到待办列表。
 	}
-	p.statut = "R"
+	p.statut = "R" // 设置状态为"R"表示就绪。
 }
 
 func (p *personne_serv) travaille() {
-	p.Personne = p.afaire[0](p.Personne)
-	p.afaire = p.afaire[1:]
-	if len(p.afaire) == 0 {
-		p.statut = "C"
+	p.Personne = p.afaire[0](p.Personne) // 执行待办列表中的第一个工作，并更新Personne字段。
+	p.afaire = p.afaire[1:]              // 移除已完成的工作。
+	if len(p.afaire) == 0 {              // 检查待办列表是否为空。
+		p.statut = "C" // 如果完成所有工作，设置状态为"C"表示完成。
 	}
 }
 
@@ -89,37 +89,37 @@ func mainteneur(methode string, id int, retourChan chan string) {
 // 它从维护器中获取结果并将其发送到socket，然后关闭socket
 func gere_connection(conn net.Conn) {
 	for {
-		message, _ := bufio.NewReader(conn).ReadString('\n')
-		requete := strings.TrimSuffix(message, "\n")
-		if len(requete) < 1 {
+		message, _ := bufio.NewReader(conn).ReadString('\n') // 从连接读取一行消息。
+		requete := strings.TrimSuffix(message, "\n")         // 移除消息末尾的换行符。
+		if len(requete) < 1 {                                // 如果消息长度小于1，即为空消息，则退出循环。
 			break
 		}
-		args := strings.Split(requete, ",")
-		fmt.Println("Requête reçu de client: " + requete)
-		id, _ := strconv.Atoi(args[0])
-		methode := args[1]
-		reponseChan := make(chan string)
+		args := strings.Split(requete, ",")               // 将消息按逗号分割成参数。
+		fmt.Println("Requête reçu de client: " + requete) // 打印接收到的请求。
+		id, _ := strconv.Atoi(args[0])                    // 将第一个参数转换为int类型的ID。
+		methode := args[1]                                // 获取方法名。
+		reponseChan := make(chan string)                  // 创建一个新的响应通道。
 		go func() {
-			mainteneur(methode, id, reponseChan)
+			mainteneur(methode, id, reponseChan) // 在一个新的协程中调用mainteneur函数处理请求。
 		}()
-		reponse := <-reponseChan
-		conn.Write([]byte(reponse + "\n"))
+		reponse := <-reponseChan           // 等待响应。
+		conn.Write([]byte(reponse + "\n")) // 将响应写回到连接中。
 	}
 }
 
 func main() {
-	if len(os.Args) < 2 {
+	if len(os.Args) < 2 { // 检查命令行参数的数量。
 		fmt.Println("Format: client <port>")
 		return
 	}
-	port, _ := strconv.Atoi(os.Args[1])
-	addr := ADRESSE + ":" + fmt.Sprint(port)
+	port, _ := strconv.Atoi(os.Args[1])      // 获取端口号。
+	addr := ADRESSE + ":" + fmt.Sprint(port) // 构造完整的地址。
 
-	ln, _ := net.Listen("tcp", addr)
-	fmt.Println("Ecoute sur", addr)
+	ln, _ := net.Listen("tcp", addr) // 在指定地址监听TCP连接。
+	fmt.Println("Ecoute sur", addr)  // 打印监听地址。
 	for {
-		conn, _ := ln.Accept()
-		fmt.Println("Accepte une connection.")
-		go gere_connection(conn)
+		conn, _ := ln.Accept()                 // 接受一个新的连接。
+		fmt.Println("Accepte une connection.") // 打印接受连接的消息。
+		go gere_connection(conn)               // 为每个连接启动一个新的协程处理。
 	}
 }

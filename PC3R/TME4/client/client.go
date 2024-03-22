@@ -42,16 +42,16 @@ type personne_emp struct {
 	lectureChan chan message                    //发送数据用
 }
 
-type message_proxy struct {
-	identifiant int
-	retourChan  chan string // socket TCP
-	methode     string
+type message_proxy struct { //端口信息
+	identifiant int         //个人ID
+	retourChan  chan string // TCP端口
+	methode     string      //执行的任务的名字
 }
 
 // paquet de personne distante, pour la Partie 2, implemente l'interface personne_int
-type personne_dist struct {
-	identifiant int
-	proxy       chan message_proxy
+type personne_dist struct { //远程角色
+	identifiant int                //人物id
+	proxy       chan message_proxy //端口信息
 }
 
 // interface des personnes manipulees par les ouvriers, les
@@ -117,9 +117,9 @@ func (p *personne_emp) donne_statut() string {
 
 func (p personne_dist) initialise() {
 	retour := make(chan string)
-	message := message_proxy{identifiant: p.identifiant, methode: "initialise", retourChan: retour}
-	p.proxy <- message
-	<-retour
+	message := message_proxy{identifiant: p.identifiant, methode: "initialise", retourChan: retour} //调用函数，连接端口
+	p.proxy <- message                                                                              //把人物信息发送到proxy里
+	<-retour                                                                                        //等待retour的反馈
 }
 
 func (p personne_dist) travaille() {
@@ -149,18 +149,18 @@ func (p personne_dist) donne_statut() string {
 // il doit utiliser une connection TCP sur le port donné en ligne de commande
 
 func proxy(port string, requeteChan chan message_proxy) {
-	address := ADRESSE + ":" + port
-	conn, _ := net.Dial("tcp", address)
+	address := ADRESSE + ":" + port     //服务器地址
+	conn, _ := net.Dial("tcp", address) //建立TCP连接
 	for {
-		message := <-requeteChan
-		requete := strconv.Itoa(message.identifiant) + "," + message.methode + "\n"
+		message := <-requeteChan                                                    //接收端口信息
+		requete := strconv.Itoa(message.identifiant) + "," + message.methode + "\n" //寻找对应的任务函数
 		fmt.Fprintf(conn, fmt.Sprintf(requete))
-		recu, _ := bufio.NewReader(conn).ReadString('\n')
-		reponse := strings.TrimSuffix(recu, "\n")
+		recu, _ := bufio.NewReader(conn).ReadString('\n') //接收TCP传回的消息，读到换行符结束
+		reponse := strings.TrimSuffix(recu, "\n")         //移除尾部的换行符
 		fmt.Println("Réponse reçu du serveur: " + reponse)
-		message.retourChan <- reponse
+		message.retourChan <- reponse //将消息发还给message的Chan
 	}
-	conn.Close()
+	conn.Close() //关闭TCP，但是实际上不会触发，因为前面是无限循环
 }
 
 // Partie 1 : contacté par la méthode initialise() de personne_emp, récupère une ligne donnée dans le fichier source
@@ -231,14 +231,15 @@ func producteur(lectureChan chan message, prodChan chan personne_int) {
 // utilisé pour retrouver l'object sur le serveur
 // la creation sur le client d'une personne_dist doit declencher la creation sur le serveur d'une "vraie" personne, initialement vide, de statut V
 
+// 远程人物的生产者，监听ID并且创建对应的角色
 func producteur_distant(deProdVersGest chan personne_int, requeteChan chan message_proxy, id_frais_chan chan int) {
 	for {
-		id := <-id_frais_chan
-		new_pers := personne_dist{identifiant: id, proxy: requeteChan}
-		retour := make(chan string)
-		requeteChan <- message_proxy{identifiant: id, methode: "creer", retourChan: retour}
-		<-retour
-		deProdVersGest <- new_pers
+		id := <-id_frais_chan                                                               //接收id信息
+		new_pers := personne_dist{identifiant: id, proxy: requeteChan}                      //初始化新角色
+		retour := make(chan string)                                                         //
+		requeteChan <- message_proxy{identifiant: id, methode: "creer", retourChan: retour} //传输对应命令
+		<-retour                                                                            //等待接收retour的信息
+		deProdVersGest <- new_pers                                                          //将角色发送到Gest，触发gestionnaire函数
 	}
 }
 
